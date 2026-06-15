@@ -6,6 +6,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function MapelIndex({ subjects }) {
     const handleDelete = (id, nama) => {
@@ -33,7 +34,7 @@ export default function MapelIndex({ subjects }) {
             
             <div className="space-y-6">
                 <PageHeader 
-                    title="📚 Mata Pelajaran" 
+                    title={<div className="flex items-center"><Icon name="book" className="w-7 h-7 mr-3 text-emerald-600" /> Mata Pelajaran</div>} 
                     actionText="Tambah Mapel" 
                     actionHref={route('admin.mapel.create')} 
                 />
@@ -55,8 +56,12 @@ export default function MapelIndex({ subjects }) {
                                 <td className="px-6 py-4 text-sm text-slate-600">{s.deskripsi || '-'}</td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('admin.mapel.edit', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${s.nama_mapel}`}>✏️ Edit</Link>
-                                        <button onClick={() => handleDelete(s.id, s.nama_mapel)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${s.nama_mapel}`}>🗑️ Hapus</button>
+                                        <Link href={route('admin.mapel.edit', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${s.nama_mapel}`}>
+                                            <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
+                                        </Link>
+                                        <button onClick={() => handleDelete(s.id, s.nama_mapel)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${s.nama_mapel}`}>
+                                            <Icon name="trash" className="w-4 h-4 mr-1.5" /> Hapus
+                                        </button>
                                     </ActionButtons>
                                 </td>
                             </tr>

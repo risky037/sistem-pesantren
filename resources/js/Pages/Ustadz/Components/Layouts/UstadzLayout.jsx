@@ -22,12 +22,12 @@ export default function UstadzLayout({ children }) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex overflow-hidden">
+        <div className="h-screen bg-gray-100 flex overflow-hidden">
             {/* Sidebar (handles its own overlay on mobile) */}
             <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             {/* Main content column */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
                 {/* Top header */}
                 <header className="bg-white shadow-sm px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-10">
                     {/* Hamburger (mobile) */}

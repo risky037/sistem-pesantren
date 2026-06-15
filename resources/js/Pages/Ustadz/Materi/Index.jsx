@@ -6,6 +6,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function MateriIndex({ materis }) {
     const handleDelete = (id, judul) => {
@@ -33,7 +34,7 @@ export default function MateriIndex({ materis }) {
             
             <div className="space-y-6">
                 <PageHeader 
-                    title="📚 Materi Ajar Saya" 
+                    title={<div className="flex items-center"><Icon name="book" className="w-7 h-7 mr-3 text-emerald-600" /> Materi Ajar Saya</div>} 
                     actionText="Tambah Materi" 
                     actionHref={route('ustadz.materi.create')} 
                 />
@@ -59,14 +60,18 @@ export default function MateriIndex({ materis }) {
                                 </td>
                                 <td className="px-6 py-4 text-sm text-slate-600">
                                     {m.original_file_name ? (
-                                        <a href={`/storage/${m.file_path}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline" aria-label={`Unduh ${m.original_file_name}`}>📎 {m.original_file_name}</a>
+                                        <a href={`/storage/${m.file_path}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline inline-flex items-center" aria-label={`Unduh ${m.original_file_name}`}><Icon name="file" className="w-4 h-4 mr-1.5" /> {m.original_file_name}</a>
                                     ) : '-'}
                                 </td>
                                 <td className="px-6 py-4 text-slate-600 text-sm">{m.published_at || '-'}</td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('ustadz.materi.edit', m.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${m.judul}`}>✏️ Edit</Link>
-                                        <button onClick={() => handleDelete(m.id, m.judul)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${m.judul}`}>🗑️ Hapus</button>
+                                        <Link href={route('ustadz.materi.edit', m.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${m.judul}`}>
+                                            <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
+                                        </Link>
+                                        <button onClick={() => handleDelete(m.id, m.judul)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${m.judul}`}>
+                                            <Icon name="trash" className="w-4 h-4 mr-1.5" /> Hapus
+                                        </button>
                                     </ActionButtons>
                                 </td>
                             </tr>

@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
+import Icon from '@/Components/Icon';
 
 export default function SantriDetail({ santri, penilaians }) {
     return (
@@ -8,14 +9,18 @@ export default function SantriDetail({ santri, penilaians }) {
             
             <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                    <Link href={route('ustadz.santri.index')} className="text-cyan-600 hover:text-cyan-800">← Kembali</Link>
+                    <Link href={route('ustadz.santri.index')} className="text-cyan-600 hover:text-cyan-800 flex items-center">
+                        <Icon name="back" className="w-4 h-4 mr-1" /> Kembali
+                    </Link>
                     <h1 className="text-3xl font-bold text-gray-900">Detail Santri</h1>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white rounded-lg shadow-md p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4">📋 Informasi Pribadi</h2>
+                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                                <Icon name="profile" className="w-6 h-6 mr-2 text-gray-500" /> Informasi Pribadi
+                            </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div><p className="text-gray-600 text-sm">Nama</p><p className="font-semibold text-gray-900">{santri.nama}</p></div>
                                 <div><p className="text-gray-600 text-sm">NIS</p><p className="font-semibold text-gray-900">{santri.nis}</p></div>
@@ -30,7 +35,9 @@ export default function SantriDetail({ santri, penilaians }) {
 
                         {penilaians && penilaians.length > 0 && (
                             <div className="bg-white rounded-lg shadow-md p-6">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">⭐ Nilai</h2>
+                                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                                    <Icon name="check" className="w-6 h-6 mr-2 text-gray-500" /> Nilai
+                                </h2>
                                 <div className="space-y-3">
                                     {penilaians.map((p) => (
                                         <div key={p.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
@@ -51,7 +58,9 @@ export default function SantriDetail({ santri, penilaians }) {
                     </div>
 
                     <div className="bg-white rounded-lg shadow-md p-6 h-fit">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">📊 Ringkasan</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                            <Icon name="dashboard" className="w-6 h-6 mr-2 text-gray-500" /> Ringkasan
+                        </h2>
                         <div className="space-y-4">
                             <div className="text-center">
                                 {penilaians && penilaians.length > 0 ? (
@@ -66,8 +75,8 @@ export default function SantriDetail({ santri, penilaians }) {
                                 )}
                             </div>
                             <div className={`rounded p-3 border ${penilaians && penilaians.length > 0 ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
-                                <p className={`font-semibold text-center ${penilaians && penilaians.length > 0 ? 'text-green-800' : 'text-gray-500'}`}>
-                                    {penilaians && penilaians.length > 0 ? '✅ Data Tersedia' : '📝 Belum Dinilai'}
+                                <p className={`font-semibold text-center flex items-center justify-center ${penilaians && penilaians.length > 0 ? 'text-green-800' : 'text-gray-500'}`}>
+                                    {penilaians && penilaians.length > 0 ? <><Icon name="check" className="w-4 h-4 mr-1.5" /> Data Tersedia</> : <><Icon name="edit" className="w-4 h-4 mr-1.5" /> Belum Dinilai</>}
                                 </p>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import Icon from '@/Components/Icon';
 
 export default function Welcome({ auth }) {
     const user = auth?.user;
@@ -77,17 +78,23 @@ export default function Welcome({ auth }) {
                     {/* Features Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-24 text-left">
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">🎓</div>
+                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                                <Icon name="users" className="w-6 h-6" />
+                            </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Data Terpusat</h3>
                             <p className="text-gray-600">Kelola data santri dan ustadz dalam satu database yang aman dan mudah diakses kapan saja.</p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-4">📅</div>
+                            <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-4">
+                                <Icon name="calendar" className="w-6 h-6" />
+                            </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Penjadwalan Mudah</h3>
                             <p className="text-gray-600">Sistem jadwal mengajar yang dinamis untuk menghindari bentrok dan mengoptimalkan waktu.</p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4">📊</div>
+                            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4">
+                                <Icon name="dashboard" className="w-6 h-6" />
+                            </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Penilaian Digital</h3>
                             <p className="text-gray-600">Proses input nilai secara langsung oleh ustadz pengampu dengan perhitungan otomatis.</p>
                         </div>

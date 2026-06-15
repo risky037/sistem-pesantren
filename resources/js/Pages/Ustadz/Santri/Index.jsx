@@ -5,6 +5,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function SantriIndex({ santris }) {
     return (
@@ -12,7 +13,7 @@ export default function SantriIndex({ santris }) {
             <Head title="Data Santri" />
             
             <div className="space-y-6">
-                <PageHeader title="👥 Data Santri" />
+                <PageHeader title={<div className="flex items-center"><Icon name="users" className="w-7 h-7 mr-3 text-emerald-600" /> Data Santri</div>} />
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -37,7 +38,9 @@ export default function SantriIndex({ santris }) {
                                 </td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('ustadz.santri.detail', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Detail Santri ${s.nama}`}>👁️ Detail</Link>
+                                        <Link href={route('ustadz.santri.detail', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Detail Santri ${s.nama}`}>
+                                            <Icon name="profile" className="w-4 h-4 mr-1.5" /> Detail
+                                        </Link>
                                     </ActionButtons>
                                 </td>
                             </tr>

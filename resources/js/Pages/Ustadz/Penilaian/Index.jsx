@@ -4,6 +4,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function PenilaianIndex({ summary }) {
     return (
@@ -11,7 +12,7 @@ export default function PenilaianIndex({ summary }) {
             <Head title="Penilaian" />
             
             <div className="space-y-6">
-                <PageHeader title="⭐ Manajemen Penilaian" />
+                <PageHeader title={<div className="flex items-center"><Icon name="check" className="w-7 h-7 mr-3 text-emerald-600" /> Manajemen Penilaian</div>} />
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -45,7 +46,9 @@ export default function PenilaianIndex({ summary }) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <ActionButtons>
-                                            <Link href={route('ustadz.penilaian.input', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Input Nilai ${s.nama_mapel}`}>✏️ Input Nilai</Link>
+                                            <Link href={route('ustadz.penilaian.input', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Input Nilai ${s.nama_mapel}`}>
+                                                <Icon name="edit" className="w-4 h-4 mr-1.5" /> Input Nilai
+                                            </Link>
                                         </ActionButtons>
                                     </td>
                                 </tr>

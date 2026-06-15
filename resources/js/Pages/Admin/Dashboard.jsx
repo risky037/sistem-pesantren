@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import AdminLayout from './Components/Layouts/AdminLayout';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
+import Icon from '@/Components/Icon';
 
 export default function Dashboard({ stats, recentSantri }) {
     return (
@@ -18,10 +19,10 @@ export default function Dashboard({ stats, recentSantri }) {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[
-                        { title: 'Total Santri', value: stats?.totalSantri ?? 0, icon: '👥', bg: 'bg-white', border: 'border-blue-400', text: 'text-blue-600', iconBg: 'bg-blue-50' },
-                        { title: 'Total Ustadz', value: stats?.totalUstadz ?? 0, icon: '👨‍🏫', bg: 'bg-white', border: 'border-emerald-400', text: 'text-emerald-600', iconBg: 'bg-emerald-50' },
-                        { title: 'Mata Pelajaran', value: stats?.totalMapel ?? 0, icon: '📚', bg: 'bg-white', border: 'border-purple-400', text: 'text-purple-600', iconBg: 'bg-purple-50' },
-                        { title: 'Jadwal Aktif', value: stats?.totalJadwal ?? 0, icon: '📅', bg: 'bg-white', border: 'border-orange-400', text: 'text-orange-600', iconBg: 'bg-orange-50' },
+                        { title: 'Total Santri', value: stats?.totalSantri ?? 0, icon: <Icon name="users" className="w-8 h-8" />, bg: 'bg-white', border: 'border-blue-400', text: 'text-blue-600', iconBg: 'bg-blue-50' },
+                        { title: 'Total Ustadz', value: stats?.totalUstadz ?? 0, icon: <Icon name="teacher" className="w-8 h-8" />, bg: 'bg-white', border: 'border-emerald-400', text: 'text-emerald-600', iconBg: 'bg-emerald-50' },
+                        { title: 'Mata Pelajaran', value: stats?.totalMapel ?? 0, icon: <Icon name="book" className="w-8 h-8" />, bg: 'bg-white', border: 'border-purple-400', text: 'text-purple-600', iconBg: 'bg-purple-50' },
+                        { title: 'Jadwal Aktif', value: stats?.totalJadwal ?? 0, icon: <Icon name="calendar" className="w-8 h-8" />, bg: 'bg-white', border: 'border-orange-400', text: 'text-orange-600', iconBg: 'bg-orange-50' },
                     ].map((s, i) => (
                         <div key={i} className={`${s.bg} border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group`}>
                             <div className={`absolute top-0 right-0 w-2 h-full ${s.iconBg} ${s.border} border-l-4 opacity-50 group-hover:opacity-100 transition-opacity`}></div>
@@ -42,7 +43,7 @@ export default function Dashboard({ stats, recentSantri }) {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
                         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            <span>📋</span> Santri Terbaru Terdaftar
+                            <Icon name="file" className="w-6 h-6 text-slate-500" /> Santri Terbaru Terdaftar
                         </h2>
                     </div>
                     <DataTableWrapper>

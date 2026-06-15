@@ -6,6 +6,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function JadwalIndex({ jadwals }) {
     const handleDelete = (id) => {
@@ -33,7 +34,7 @@ export default function JadwalIndex({ jadwals }) {
             
             <div className="space-y-6">
                 <PageHeader 
-                    title="📅 Jadwal Kelas" 
+                    title={<div className="flex items-center"><Icon name="calendar" className="w-7 h-7 mr-3 text-emerald-600" /> Jadwal Kelas</div>} 
                     actionText="Tambah Jadwal" 
                     actionHref={route('admin.jadwal.create')} 
                 />
@@ -63,8 +64,12 @@ export default function JadwalIndex({ jadwals }) {
                                 <td className="px-6 py-4 text-sm text-slate-600">{j.ruang || '-'}</td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('admin.jadwal.edit', j.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit Jadwal`}>✏️ Edit</Link>
-                                        <button onClick={() => handleDelete(j.id)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus Jadwal`}>🗑️ Hapus</button>
+                                        <Link href={route('admin.jadwal.edit', j.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit Jadwal`}>
+                                            <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
+                                        </Link>
+                                        <button onClick={() => handleDelete(j.id)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus Jadwal`}>
+                                            <Icon name="trash" className="w-4 h-4 mr-1.5" /> Hapus
+                                        </button>
                                     </ActionButtons>
                                 </td>
                             </tr>
