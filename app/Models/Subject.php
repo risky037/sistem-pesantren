@@ -1,23 +1,32 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration {
-    public function up(): void
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Subject extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'kode_mapel',
+        'nama_mapel',
+        'deskripsi',
+    ];
+
+    public function jadwals()
     {
-        Schema::create('subjects', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_mapel')->unique();
-            $table->string('nama_mapel');
-            $table->text('deskripsi')->nullable();
-            $table->timestamps();
-        });
+        return $this->hasMany(Jadwal::class);
     }
 
-    public function down(): void
+    public function penilaians()
     {
-        Schema::dropIfExists('subjects');
+        return $this->hasMany(Penilaian::class);
     }
-};
+
+    public function materis()
+    {
+        return $this->hasMany(Materi::class);
+    }
+}

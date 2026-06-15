@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_mapel')->unique();
+            $table->string('nama_mapel');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
