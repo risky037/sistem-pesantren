@@ -6,6 +6,7 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
+import Icon from '@/Components/Icon';
 
 export default function SantriIndex({ santris }) {
     const handleDelete = (id, name) => {
@@ -33,7 +34,7 @@ export default function SantriIndex({ santris }) {
             
             <div className="space-y-6">
                 <PageHeader 
-                    title="🎓 Manajemen Santri" 
+                    title={<div className="flex items-center"><Icon name="users" className="w-7 h-7 mr-3 text-emerald-600" /> Manajemen Santri</div>} 
                     actionText="Tambah Santri" 
                     actionHref={route('admin.santri.create')} 
                 />
@@ -63,8 +64,12 @@ export default function SantriIndex({ santris }) {
                                 </td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('admin.santri.edit', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${s.nama}`}>✏️ Edit</Link>
-                                        <button onClick={() => handleDelete(s.id, s.nama)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${s.nama}`}>🗑️ Hapus</button>
+                                        <Link href={route('admin.santri.edit', s.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${s.nama}`}>
+                                            <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
+                                        </Link>
+                                        <button onClick={() => handleDelete(s.id, s.nama)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${s.nama}`}>
+                                            <Icon name="trash" className="w-4 h-4 mr-1.5" /> Hapus
+                                        </button>
                                     </ActionButtons>
                                 </td>
                             </tr>

@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
+import Icon from '@/Components/Icon';
 
 export default function PenilaianInput({ subject, santris, existingGrades }) {
     // Initialize grades from existing data or empty
@@ -91,11 +92,16 @@ export default function PenilaianInput({ subject, santris, existingGrades }) {
 
                         <div className="p-6 flex flex-col sm:flex-row gap-3 border-t border-gray-100 bg-gray-50">
                             <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
-                                {processing ? '⏳ Menyimpan...' : '💾 Simpan Nilai'}
+                                {processing ? (
+                                    <><Icon name="spinner" className="w-5 h-5 mr-2" /> Menyimpan...</>
+                                ) : (
+                                    <><Icon name="save" className="w-5 h-5 mr-2" /> Simpan Nilai</>
+                                )}
                             </PrimaryButton>
                             <Link href={route('ustadz.penilaian.index')} className="w-full sm:w-auto">
                                 <SecondaryButton type="button" className="justify-center py-2.5 w-full">
-                                    ❌ Batal
+                                    <Icon name="cancel" className="w-5 h-5 mr-2" />
+                                    Batal
                                 </SecondaryButton>
                             </Link>
                         </div>

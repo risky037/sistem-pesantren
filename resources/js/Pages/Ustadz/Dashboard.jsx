@@ -1,12 +1,13 @@
 import { Head } from '@inertiajs/react';
 import UstadzLayout from './Components/Layouts/UstadzLayout';
+import Icon from '@/Components/Icon';
 
 export default function Dashboard({ stats, jadwalHariIni }) {
     const statsCards = [
-        { title: 'Total Kelas', value: stats?.totalKelas ?? 0, subtitle: 'Yang Diampu', icon: '📚', bg: 'bg-white', border: 'border-indigo-400', textColor: 'text-indigo-600', iconBg: 'bg-indigo-50' },
-        { title: 'Total Santri', value: stats?.totalSantri ?? 0, subtitle: 'Terdaftar', icon: '👥', bg: 'bg-white', border: 'border-cyan-400', textColor: 'text-cyan-600', iconBg: 'bg-cyan-50' },
-        { title: 'Total Materi', value: stats?.totalMateri ?? 0, subtitle: 'Yang Diunggah', icon: '📄', bg: 'bg-white', border: 'border-amber-400', textColor: 'text-amber-600', iconBg: 'bg-amber-50' },
-        { title: 'Penilaian', value: stats?.totalPenilaian ?? 0, subtitle: 'Terisi', icon: '✅', bg: 'bg-white', border: 'border-emerald-400', textColor: 'text-emerald-600', iconBg: 'bg-emerald-50' },
+        { title: 'Total Kelas', value: stats?.totalKelas ?? 0, subtitle: 'Yang Diampu', icon: <Icon name="book" className="w-8 h-8" />, bg: 'bg-white', border: 'border-indigo-400', textColor: 'text-indigo-600', iconBg: 'bg-indigo-50' },
+        { title: 'Total Santri', value: stats?.totalSantri ?? 0, subtitle: 'Terdaftar', icon: <Icon name="users" className="w-8 h-8" />, bg: 'bg-white', border: 'border-cyan-400', textColor: 'text-cyan-600', iconBg: 'bg-cyan-50' },
+        { title: 'Total Materi', value: stats?.totalMateri ?? 0, subtitle: 'Yang Diunggah', icon: <Icon name="file" className="w-8 h-8" />, bg: 'bg-white', border: 'border-amber-400', textColor: 'text-amber-600', iconBg: 'bg-amber-50' },
+        { title: 'Penilaian', value: stats?.totalPenilaian ?? 0, subtitle: 'Terisi', icon: <Icon name="check" className="w-8 h-8" />, bg: 'bg-white', border: 'border-emerald-400', textColor: 'text-emerald-600', iconBg: 'bg-emerald-50' },
     ];
 
     return (
@@ -40,7 +41,7 @@ export default function Dashboard({ stats, jadwalHariIni }) {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
                         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            <span>📅</span> Jadwal Mengajar
+                            <Icon name="calendar" className="w-6 h-6 text-slate-500" /> Jadwal Mengajar
                         </h2>
                     </div>
                     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -58,11 +59,11 @@ export default function Dashboard({ stats, jadwalHariIni }) {
                                 </div>
                                 <div className="flex flex-col gap-2 text-sm text-slate-600 pl-2">
                                     <div className="flex items-center gap-2">
-                                        <span className="opacity-60">⏰</span>
+                                        <Icon name="clock" className="w-4 h-4 opacity-60" />
                                         <span className="font-medium">{jadwal.jam_mulai?.substring(0,5)} - {jadwal.jam_selesai?.substring(0,5)}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="opacity-60">📍</span>
+                                        <Icon name="location" className="w-4 h-4 opacity-60" />
                                         <span className="font-medium">{jadwal.ruang || 'Ruang belum ditentukan'}</span>
                                     </div>
                                 </div>
@@ -70,8 +71,8 @@ export default function Dashboard({ stats, jadwalHariIni }) {
                         ))}
                         {(!jadwalHariIni || jadwalHariIni.length === 0) && (
                             <div className="col-span-full py-8 text-center">
-                                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mx-auto mb-3">
-                                    <span className="text-2xl opacity-50">📅</span>
+                                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mx-auto mb-3 text-slate-400">
+                                    <Icon name="calendar" className="w-8 h-8 opacity-70" />
                                 </div>
                                 <p className="text-slate-900 font-medium">Belum ada jadwal mengajar.</p>
                                 <p className="text-slate-500 text-sm mt-1">Jadwal Anda akan muncul di sini.</p>

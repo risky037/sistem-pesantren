@@ -4,6 +4,7 @@ import Pagination from '@/Components/Pagination';
 import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
+import Icon from '@/Components/Icon';
 
 export default function JadwalIndex({ jadwals }) {
     return (
@@ -11,7 +12,7 @@ export default function JadwalIndex({ jadwals }) {
             <Head title="Jadwal Mengajar" />
             
             <div className="space-y-6">
-                <PageHeader title="📅 Jadwal Mengajar Saya" />
+                <PageHeader title={<div className="flex items-center"><Icon name="calendar" className="w-7 h-7 mr-3 text-emerald-600" /> Jadwal Mengajar Saya</div>} />
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">

@@ -1,7 +1,8 @@
 import { Link, usePage, router } from '@inertiajs/react';
 import Swal from 'sweetalert2';
+import Icon from '@/Components/Icon';
 
-function SidebarItem({ name, href, basePath }) {
+function SidebarItem({ name, icon, href, basePath }) {
     const { url } = usePage();
     const isActive = url === href || url.startsWith(basePath ?? href);
 
@@ -14,18 +15,19 @@ function SidebarItem({ name, href, basePath }) {
                     : 'text-indigo-100 hover:bg-indigo-700 hover:text-white'
             }`}
         >
-            {name}
+            <Icon name={icon} className="w-5 h-5 flex-shrink-0" />
+            <span className="truncate">{name}</span>
         </Link>
     );
 }
 
 export default function Sidebar({ open, onClose }) {
     const menus = [
-        { name: '📊 Dashboard',       href: route('ustadz.dashboard'),      basePath: '/ustadz/dashboard' },
-        { name: '📅 Jadwal Mengajar', href: route('ustadz.jadwal.index'),   basePath: '/ustadz/jadwal' },
-        { name: '👥 Data Santri',     href: route('ustadz.santri.index'),   basePath: '/ustadz/santri' },
-        { name: '⭐ Penilaian',       href: route('ustadz.penilaian.index'), basePath: '/ustadz/penilaian' },
-        { name: '📚 Materi Ajar',     href: route('ustadz.materi.index'),   basePath: '/ustadz/materi' },
+        { name: 'Dashboard',       icon: 'dashboard', href: route('ustadz.dashboard'),      basePath: '/ustadz/dashboard' },
+        { name: 'Jadwal Mengajar', icon: 'calendar',  href: route('ustadz.jadwal.index'),   basePath: '/ustadz/jadwal' },
+        { name: 'Data Santri',     icon: 'users',     href: route('ustadz.santri.index'),   basePath: '/ustadz/santri' },
+        { name: 'Penilaian',       icon: 'check',     href: route('ustadz.penilaian.index'), basePath: '/ustadz/penilaian' },
+        { name: 'Materi Ajar',     icon: 'book',      href: route('ustadz.materi.index'),   basePath: '/ustadz/materi' },
     ];
 
     const handleLogout = () => {
@@ -84,6 +86,7 @@ export default function Sidebar({ open, onClose }) {
                         <SidebarItem
                             key={menu.href}
                             name={menu.name}
+                            icon={menu.icon}
                             href={menu.href}
                             basePath={menu.basePath}
                         />
@@ -96,13 +99,15 @@ export default function Sidebar({ open, onClose }) {
                         href={route('profile.edit')}
                         className="flex items-center gap-3 px-4 py-3 rounded-lg text-indigo-200 hover:bg-indigo-700 hover:text-white font-medium transition-all duration-150"
                     >
-                        👤 Profil Saya
+                        <Icon name="profile" className="w-5 h-5 flex-shrink-0" />
+                        Profil Saya
                     </Link>
                     <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/30 hover:text-red-300 font-medium transition-all duration-150"
                     >
-                        🚪 Keluar
+                        <Icon name="logout" className="w-5 h-5 flex-shrink-0" />
+                        Keluar
                     </button>
                 </div>
             </aside>
