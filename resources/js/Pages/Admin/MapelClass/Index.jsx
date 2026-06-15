@@ -1,13 +1,26 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '../Components/Layouts/AdminLayout';
 import Pagination from '@/Components/Pagination';
-import FlashMessage from '@/Components/FlashMessage';
+import Swal from 'sweetalert2';
 
 export default function MapelIndex({ subjects }) {
     const handleDelete = (id, nama) => {
-        if (confirm(`Yakin ingin menghapus mapel "${nama}"?`)) {
-            router.delete(route('admin.mapel.destroy', id));
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: `Yakin ingin menghapus mapel "${nama}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route('admin.mapel.destroy', id), {
+                    preserveScroll: true
+                });
+            }
+        });
     };
 
     return (
@@ -15,7 +28,6 @@ export default function MapelIndex({ subjects }) {
             <Head title="Mata Pelajaran" />
             
             <div className="space-y-6">
-                <FlashMessage />
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold text-gray-900">📚 Mata Pelajaran</h1>
                     <Link href={route('admin.mapel.create')} className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition">

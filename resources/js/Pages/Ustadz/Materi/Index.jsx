@@ -1,13 +1,26 @@
 import { Head, Link, router } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
 import Pagination from '@/Components/Pagination';
-import FlashMessage from '@/Components/FlashMessage';
+import Swal from 'sweetalert2';
 
 export default function MateriIndex({ materis }) {
     const handleDelete = (id, judul) => {
-        if (confirm(`Yakin ingin menghapus materi "${judul}"?`)) {
-            router.delete(route('ustadz.materi.destroy', id));
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: `Yakin ingin menghapus materi "${judul}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route('ustadz.materi.destroy', id), {
+                    preserveScroll: true
+                });
+            }
+        });
     };
 
     return (
@@ -15,7 +28,6 @@ export default function MateriIndex({ materis }) {
             <Head title="Materi Ajar" />
             
             <div className="space-y-6">
-                <FlashMessage />
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold text-gray-900">📚 Materi Ajar Saya</h1>
                     <Link href={route('ustadz.materi.create')} className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition">

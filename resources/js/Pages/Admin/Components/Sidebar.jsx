@@ -1,4 +1,5 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 
 function SidebarItem({ name, href, basePath }) {
     const { url } = usePage();
@@ -26,6 +27,23 @@ export default function Sidebar({ open, onClose }) {
         { name: '📚 Mata Pelajaran',   href: route('admin.mapel.index'),    basePath: '/admin/mapel' },
         { name: '📅 Jadwal Kelas',     href: route('admin.jadwal.index'),   basePath: '/admin/jadwal' },
     ];
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'Konfirmasi Keluar',
+            text: 'Apakah Anda yakin ingin keluar dari sistem?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Keluar',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route('logout'));
+            }
+        });
+    };
 
     return (
         <>
@@ -80,14 +98,12 @@ export default function Sidebar({ open, onClose }) {
                     >
                         👤 Profil Saya
                     </Link>
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
+                    <button
+                        onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/30 hover:text-red-300 font-medium transition-all duration-150"
                     >
                         🚪 Keluar
-                    </Link>
+                    </button>
                 </div>
             </aside>
         </>
