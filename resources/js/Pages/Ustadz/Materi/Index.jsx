@@ -2,6 +2,10 @@ import { Head, Link, router } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
 import Pagination from '@/Components/Pagination';
 import Swal from 'sweetalert2';
+import PageHeader from '@/Components/PageHeader';
+import DataTableWrapper from '@/Components/DataTableWrapper';
+import EmptyState from '@/Components/EmptyState';
+import ActionButtons from '@/Components/ActionButtons';
 
 export default function MateriIndex({ materis }) {
     const handleDelete = (id, judul) => {
@@ -28,53 +32,51 @@ export default function MateriIndex({ materis }) {
             <Head title="Materi Ajar" />
             
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold text-gray-900">📚 Materi Ajar Saya</h1>
-                    <Link href={route('ustadz.materi.create')} className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition">
-                        ➕ Tambah Materi
-                    </Link>
-                </div>
+                <PageHeader 
+                    title="📚 Materi Ajar Saya" 
+                    actionText="Tambah Materi" 
+                    actionHref={route('ustadz.materi.create')} 
+                />
 
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gradient-to-r from-emerald-500 to-emerald-600">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Judul Materi</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Mapel</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Kelas</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">File</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Tanggal</th>
-                                    <th className="px-6 py-3 text-center text-sm font-semibold text-white">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {materis.data.map((m) => (
-                                    <tr key={m.id} className="hover:bg-gray-50 transition">
-                                        <td className="px-6 py-4 font-semibold text-gray-900">{m.judul}</td>
-                                        <td className="px-6 py-4 text-gray-600">{m.subject?.nama_mapel}</td>
-                                        <td className="px-6 py-4"><span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">{m.kelas || '-'}</span></td>
-                                        <td className="px-6 py-4 text-sm text-gray-600">
-                                            {m.original_file_name ? (
-                                                <a href={`/storage/${m.file_path}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">📎 {m.original_file_name}</a>
-                                            ) : '-'}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-600">{m.published_at || '-'}</td>
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="flex gap-2 justify-center">
-                                                <Link href={route('ustadz.materi.edit', m.id)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition">✏️ Edit</Link>
-                                                <button onClick={() => handleDelete(m.id, m.judul)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition">🗑️ Hapus</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {materis.data.length === 0 && (
-                                    <tr><td colSpan="6" className="px-6 py-8 text-center text-gray-500">Belum ada materi.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <DataTableWrapper>
+                    <thead className="bg-slate-100 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Judul Materi</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Mapel</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Kelas</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">File</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Tanggal</th>
+                            <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 bg-white">
+                        {materis.data.map((m) => (
+                            <tr key={m.id} className="hover:bg-slate-50 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-900 text-sm">{m.judul}</td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{m.subject?.nama_mapel}</td>
+                                <td className="px-6 py-4 text-sm">
+                                    <span className="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 rounded-full font-semibold">{m.kelas || '-'}</span>
+                                </td>
+                                <td className="px-6 py-4 text-sm text-slate-600">
+                                    {m.original_file_name ? (
+                                        <a href={`/storage/${m.file_path}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline" aria-label={`Unduh ${m.original_file_name}`}>📎 {m.original_file_name}</a>
+                                    ) : '-'}
+                                </td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{m.published_at || '-'}</td>
+                                <td className="px-6 py-4">
+                                    <ActionButtons>
+                                        <Link href={route('ustadz.materi.edit', m.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${m.judul}`}>✏️ Edit</Link>
+                                        <button onClick={() => handleDelete(m.id, m.judul)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${m.judul}`}>🗑️ Hapus</button>
+                                    </ActionButtons>
+                                </td>
+                            </tr>
+                        ))}
+                        {materis.data.length === 0 && (
+                            <EmptyState title="Data Materi Kosong" description="Belum ada materi." colSpan={6} />
+                        )}
+                    </tbody>
+                </DataTableWrapper>
+
                 <Pagination links={materis.links} />
             </div>
         </UstadzLayout>

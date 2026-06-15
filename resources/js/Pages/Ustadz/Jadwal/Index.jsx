@@ -1,6 +1,9 @@
 import { Head } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
 import Pagination from '@/Components/Pagination';
+import PageHeader from '@/Components/PageHeader';
+import DataTableWrapper from '@/Components/DataTableWrapper';
+import EmptyState from '@/Components/EmptyState';
 
 export default function JadwalIndex({ jadwals }) {
     return (
@@ -8,37 +11,36 @@ export default function JadwalIndex({ jadwals }) {
             <Head title="Jadwal Mengajar" />
             
             <div className="space-y-6">
-                <h1 className="text-3xl font-bold text-gray-900">📅 Jadwal Mengajar Saya</h1>
+                <PageHeader title="📅 Jadwal Mengajar Saya" />
 
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gradient-to-r from-indigo-500 to-indigo-600">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Hari</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Jam</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Mapel</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Kelas</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Ruang</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {jadwals.data.map((j) => (
-                                    <tr key={j.id} className="hover:bg-gray-50 transition">
-                                        <td className="px-6 py-4 font-semibold text-gray-900">{j.hari}</td>
-                                        <td className="px-6 py-4 text-gray-600">{j.jam_mulai?.substring(0,5)} - {j.jam_selesai?.substring(0,5)}</td>
-                                        <td className="px-6 py-4 text-gray-600">{j.subject?.nama_mapel}</td>
-                                        <td className="px-6 py-4"><span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">{j.kelas}</span></td>
-                                        <td className="px-6 py-4 text-gray-600">{j.ruang || '-'}</td>
-                                    </tr>
-                                ))}
-                                {jadwals.data.length === 0 && (
-                                    <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-500">Belum ada jadwal mengajar.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <DataTableWrapper>
+                    <thead className="bg-slate-100 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Hari</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Jam</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Mapel</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Kelas</th>
+                            <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Ruang</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 bg-white">
+                        {jadwals.data.map((j) => (
+                            <tr key={j.id} className="hover:bg-slate-50 transition-colors">
+                                <td className="px-6 py-4 font-semibold text-slate-900 text-sm">{j.hari}</td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{j.jam_mulai?.substring(0,5)} - {j.jam_selesai?.substring(0,5)}</td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{j.subject?.nama_mapel}</td>
+                                <td className="px-6 py-4 text-sm">
+                                    <span className="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 rounded-full font-semibold">{j.kelas}</span>
+                                </td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{j.ruang || '-'}</td>
+                            </tr>
+                        ))}
+                        {jadwals.data.length === 0 && (
+                            <EmptyState title="Jadwal Kosong" description="Belum ada jadwal mengajar." colSpan={5} />
+                        )}
+                    </tbody>
+                </DataTableWrapper>
+
                 <Pagination links={jadwals.links} />
             </div>
         </UstadzLayout>
