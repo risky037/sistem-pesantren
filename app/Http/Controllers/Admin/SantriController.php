@@ -10,12 +10,39 @@ use Inertia\Inertia;
 
 class SantriController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $santris = Santri::latest()->paginate(10);
+        $filters = $request->only(['search', 'status', 'jenis_kelamin', 'kelas']);
+
+        $santris = Santri::when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('nis', 'like', '%' . $search . '%')
+                      ->orWhere('nama', 'like', '%' . $search . '%')
+                      ->orWhere('kelas', 'like', '%' . $search . '%')
+                      ->orWhere('program', 'like', '%' . $search . '%')
+                      ->orWhere('status', 'like', '%' . $search . '%');
+                });
+            })
+            ->when($filters['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->when($filters['jenis_kelamin'] ?? null, function ($query, $jk) {
+                $query->where('jenis_kelamin', $jk);
+            })
+            ->when($filters['kelas'] ?? null, function ($query, $kelas) {
+                $query->where('kelas', $kelas);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        // Get unique kelas for filter dropdown
+        $kelasList = Santri::select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
 
         return Inertia::render('Admin/Santri/Index', [
             'santris' => $santris,
+            'filters' => $filters,
+            'kelasList' => $kelasList,
         ]);
     }
 

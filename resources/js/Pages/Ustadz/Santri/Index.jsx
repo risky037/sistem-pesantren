@@ -6,14 +6,37 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import { useForm, router } from '@inertiajs/react';
 
-export default function SantriIndex({ santris }) {
+export default function SantriIndex({ santris, filters }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('ustadz.santri.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('ustadz.santri.index'));
+    };
     return (
         <UstadzLayout>
             <Head title="Data Santri" />
             
             <div className="space-y-6">
                 <PageHeader title={<div className="flex items-center"><Icon name="users" className="w-7 h-7 mr-3 text-emerald-600" /> Data Santri</div>} />
+
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari NIS, nama, kelas, program..."
+                />
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -46,7 +69,11 @@ export default function SantriIndex({ santris }) {
                             </tr>
                         ))}
                         {santris.data.length === 0 && (
-                            <EmptyState title="Data Santri Kosong" description="Belum ada santri." colSpan={5} />
+                            <EmptyState 
+                                title="Data Santri Kosong" 
+                                description={filters?.search ? "Tidak ada santri yang cocok dengan pencarian." : "Belum ada santri."} 
+                                colSpan={5} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

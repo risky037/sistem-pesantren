@@ -10,12 +10,24 @@ use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $subjects = Subject::latest()->paginate(10);
+        $filters = $request->only(['search']);
+
+        $subjects = Subject::when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('kode_mapel', 'like', '%' . $search . '%')
+                      ->orWhere('nama_mapel', 'like', '%' . $search . '%')
+                      ->orWhere('deskripsi', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Admin/MapelClass/Index', [
             'subjects' => $subjects,
+            'filters' => $filters,
         ]);
     }
 
