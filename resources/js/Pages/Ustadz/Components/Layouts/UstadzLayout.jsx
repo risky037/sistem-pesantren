@@ -10,7 +10,8 @@ export default function UstadzLayout({ children }) {
 
     // Derive a simple page title from the current URL
     const getPageTitle = () => {
-        const segments = url.replace(/^\/ustadz\/?/, '').split('/').filter(Boolean);
+        const cleanUrl = url.split('?')[0].split('#')[0];
+        const segments = cleanUrl.replace(/^\/ustadz\/?/, '').split('/').filter(Boolean);
         if (!segments.length || segments[0] === 'dashboard') return 'Dashboard';
         const titles = {
             jadwal: 'Jadwal Mengajar',

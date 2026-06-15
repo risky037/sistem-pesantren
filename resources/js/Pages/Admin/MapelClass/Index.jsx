@@ -7,8 +7,23 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import { useForm } from '@inertiajs/react';
 
-export default function MapelIndex({ subjects }) {
+export default function MapelIndex({ subjects, filters }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('admin.mapel.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('admin.mapel.index'));
+    };
     const handleDelete = (id, nama) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -39,6 +54,14 @@ export default function MapelIndex({ subjects }) {
                     actionHref={route('admin.mapel.create')} 
                 />
 
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari kode, nama mapel, atau deskripsi..."
+                />
+
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
                         <tr>
@@ -67,7 +90,11 @@ export default function MapelIndex({ subjects }) {
                             </tr>
                         ))}
                         {subjects.data.length === 0 && (
-                            <EmptyState title="Data Mapel Kosong" description="Belum ada mata pelajaran yang terdaftar." colSpan={4} />
+                            <EmptyState 
+                                title="Data Mapel Kosong" 
+                                description={filters?.search ? "Tidak ada mapel yang cocok dengan pencarian." : "Belum ada mata pelajaran yang terdaftar."} 
+                                colSpan={4} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

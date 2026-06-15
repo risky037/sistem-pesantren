@@ -7,8 +7,27 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import FormSelect from '@/Components/FormSelect';
+import { useForm } from '@inertiajs/react';
 
-export default function SantriIndex({ santris }) {
+export default function SantriIndex({ santris, filters, kelasList }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+        status: filters?.status || '',
+        jenis_kelamin: filters?.jenis_kelamin || '',
+        kelas: filters?.kelas || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('admin.santri.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('admin.santri.index'));
+    };
     const handleDelete = (id, name) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -38,6 +57,46 @@ export default function SantriIndex({ santris }) {
                     actionText="Tambah Santri" 
                     actionHref={route('admin.santri.create')} 
                 />
+
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari NIS, nama, kelas, program..."
+                >
+                    <FormSelect
+                        value={data.kelas}
+                        onChange={(e) => setData('kelas', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua Kelas</option>
+                        {kelasList.map((k) => (
+                            <option key={k} value={k}>{k}</option>
+                        ))}
+                    </FormSelect>
+                    
+                    <FormSelect
+                        value={data.jenis_kelamin}
+                        onChange={(e) => setData('jenis_kelamin', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua JK</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </FormSelect>
+
+                    <FormSelect
+                        value={data.status}
+                        onChange={(e) => setData('status', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua Status</option>
+                        <option value="aktif">Aktif</option>
+                        <option value="alumni">Alumni</option>
+                        <option value="keluar">Keluar</option>
+                    </FormSelect>
+                </FilterBar>
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -75,7 +134,11 @@ export default function SantriIndex({ santris }) {
                             </tr>
                         ))}
                         {santris.data.length === 0 && (
-                            <EmptyState title="Data Santri Kosong" description="Belum ada santri yang terdaftar." colSpan={6} />
+                            <EmptyState 
+                                title="Data Santri Kosong" 
+                                description={(filters?.search || filters?.status || filters?.jenis_kelamin || filters?.kelas) ? "Tidak ada santri yang cocok dengan pencarian/filter." : "Belum ada santri yang terdaftar."} 
+                                colSpan={6} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

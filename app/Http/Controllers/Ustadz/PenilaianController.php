@@ -13,9 +13,10 @@ use Inertia\Inertia;
 
 class PenilaianController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         $userId = Auth::id();
+        $search = $request->input('search');
 
         // Get subjects this ustadz teaches via jadwal
         $subjectIds = Jadwal::where('user_id', $userId)->pluck('subject_id')->unique();
@@ -42,8 +43,20 @@ class PenilaianController extends Controller
             ];
         });
 
+        if ($search) {
+            $searchLower = strtolower($search);
+            $summary = $summary->filter(function ($item) use ($searchLower) {
+                $matchNama = str_contains(strtolower($item['nama_mapel']), $searchLower);
+                $matchKelas = collect($item['kelas'])->contains(function ($k) use ($searchLower) {
+                    return str_contains(strtolower($k), $searchLower);
+                });
+                return $matchNama || $matchKelas;
+            });
+        }
+
         return Inertia::render('Ustadz/Penilaian/Index', [
-            'summary' => $summary,
+            'summary' => $summary->values(),
+            'filters' => $request->only(['search']),
         ]);
     }
 

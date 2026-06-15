@@ -53,7 +53,7 @@ export default function PenilaianInput({ subject, santris, existingGrades }) {
 
                 {errors.grades && <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-sm" role="alert"><p className="font-medium">Kesalahan Input</p><p className="text-sm">{errors.grades}</p></div>}
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden max-w-5xl">
                     <form onSubmit={submit}>
                         <DataTableWrapper>
                             <thead className="bg-slate-100 border-b border-slate-200">

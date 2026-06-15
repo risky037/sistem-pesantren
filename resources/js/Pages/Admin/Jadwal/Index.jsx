@@ -7,8 +7,27 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import FormSelect from '@/Components/FormSelect';
+import { useForm } from '@inertiajs/react';
 
-export default function JadwalIndex({ jadwals }) {
+export default function JadwalIndex({ jadwals, filters, subjects, ustadzs }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+        hari: filters?.hari || '',
+        subject_id: filters?.subject_id || '',
+        user_id: filters?.user_id || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('admin.jadwal.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('admin.jadwal.index'));
+    };
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -38,6 +57,47 @@ export default function JadwalIndex({ jadwals }) {
                     actionText="Tambah Jadwal" 
                     actionHref={route('admin.jadwal.create')} 
                 />
+
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari jadwal, ustadz, ruang, kelas..."
+                >
+                    <FormSelect
+                        value={data.hari}
+                        onChange={(e) => setData('hari', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua Hari</option>
+                        {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map((h) => (
+                            <option key={h} value={h}>{h}</option>
+                        ))}
+                    </FormSelect>
+                    
+                    <FormSelect
+                        value={data.subject_id}
+                        onChange={(e) => setData('subject_id', e.target.value)}
+                        className="w-full md:w-48"
+                    >
+                        <option value="">Semua Mapel</option>
+                        {subjects.map((s) => (
+                            <option key={s.id} value={s.id}>{s.nama_mapel}</option>
+                        ))}
+                    </FormSelect>
+
+                    <FormSelect
+                        value={data.user_id}
+                        onChange={(e) => setData('user_id', e.target.value)}
+                        className="w-full md:w-48"
+                    >
+                        <option value="">Semua Ustadz</option>
+                        {ustadzs.map((u) => (
+                            <option key={u.id} value={u.id}>{u.name}</option>
+                        ))}
+                    </FormSelect>
+                </FilterBar>
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -75,7 +135,11 @@ export default function JadwalIndex({ jadwals }) {
                             </tr>
                         ))}
                         {jadwals.data.length === 0 && (
-                            <EmptyState title="Data Jadwal Kosong" description="Belum ada jadwal yang terdaftar." colSpan={7} />
+                            <EmptyState 
+                                title="Data Jadwal Kosong" 
+                                description={(filters?.search || filters?.hari || filters?.subject_id || filters?.user_id) ? "Tidak ada jadwal yang cocok dengan pencarian/filter." : "Belum ada jadwal yang terdaftar."} 
+                                colSpan={7} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

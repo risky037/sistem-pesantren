@@ -11,14 +11,24 @@ use Inertia\Inertia;
 
 class UstadzController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        $filters = $request->only(['search']);
+
         $ustadzs = User::where('role', 'ustadz')
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%');
+                });
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Admin/Ustadz/Index', [
             'ustadzs' => $ustadzs,
+            'filters' => $filters,
         ]);
     }
 
