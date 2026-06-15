@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import Sidebar from '../Sidebar';
+import FlashMessage from '@/Components/FlashMessage';
 
 export default function AdminLayout({ children }) {
     const { props, url } = usePage();
@@ -59,6 +60,7 @@ export default function AdminLayout({ children }) {
 
                 {/* Page content */}
                 <main className="flex-1 p-4 sm:p-6 overflow-x-auto">
+                    <FlashMessage />
                     {children}
                 </main>
             </div>

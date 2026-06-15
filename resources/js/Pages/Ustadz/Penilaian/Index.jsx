@@ -1,6 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
-import FlashMessage from '@/Components/FlashMessage';
 
 export default function PenilaianIndex({ summary }) {
     return (
@@ -8,7 +7,6 @@ export default function PenilaianIndex({ summary }) {
             <Head title="Penilaian" />
             
             <div className="space-y-6">
-                <FlashMessage />
                 <h1 className="text-3xl font-bold text-gray-900">⭐ Manajemen Penilaian</h1>
 
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">

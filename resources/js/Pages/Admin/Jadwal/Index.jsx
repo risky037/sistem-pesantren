@@ -1,13 +1,26 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '../Components/Layouts/AdminLayout';
 import Pagination from '@/Components/Pagination';
-import FlashMessage from '@/Components/FlashMessage';
+import Swal from 'sweetalert2';
 
 export default function JadwalIndex({ jadwals }) {
     const handleDelete = (id) => {
-        if (confirm('Yakin ingin menghapus jadwal ini?')) {
-            router.delete(route('admin.jadwal.destroy', id));
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: `Yakin ingin menghapus jadwal ini?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route('admin.jadwal.destroy', id), {
+                    preserveScroll: true
+                });
+            }
+        });
     };
 
     return (
@@ -15,7 +28,6 @@ export default function JadwalIndex({ jadwals }) {
             <Head title="Jadwal Kelas" />
             
             <div className="space-y-6">
-                <FlashMessage />
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold text-gray-900">📅 Jadwal Kelas</h1>
                     <Link href={route('admin.jadwal.create')} className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition">
