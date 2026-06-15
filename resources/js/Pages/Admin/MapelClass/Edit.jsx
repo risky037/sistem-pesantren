@@ -1,6 +1,11 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AdminLayout from '../Components/Layouts/AdminLayout';
 import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import TextInput from '@/Components/TextInput';
+import FormTextarea from '@/Components/FormTextarea';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
 
 export default function MapelEdit({ subject }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -19,35 +24,57 @@ export default function MapelEdit({ subject }) {
             <Head title="Edit Mapel" />
             
             <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <Link href={route('admin.mapel.index')} className="text-purple-600 hover:text-purple-800">← Kembali</Link>
-                    <h1 className="text-3xl font-bold text-gray-900">Edit Mata Pelajaran</h1>
+                <div className="flex items-center gap-4 mb-6">
+                    <Link href={route('admin.mapel.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Mapel">← Kembali</Link>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Edit Mata Pelajaran</h1>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
                     <form onSubmit={submit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Kode Mapel</label>
-                                <input type="text" value={data.kode_mapel} onChange={e => setData('kode_mapel', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.kode_mapel} className="mt-1" />
+                                <InputLabel htmlFor="kode_mapel" value="Kode Mapel" />
+                                <TextInput 
+                                    id="kode_mapel"
+                                    type="text" 
+                                    value={data.kode_mapel} 
+                                    onChange={e => setData('kode_mapel', e.target.value)} 
+                                    className="mt-1 block w-full" 
+                                />
+                                <InputError message={errors.kode_mapel} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Mapel</label>
-                                <input type="text" value={data.nama_mapel} onChange={e => setData('nama_mapel', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.nama_mapel} className="mt-1" />
+                                <InputLabel htmlFor="nama_mapel" value="Nama Mapel" />
+                                <TextInput 
+                                    id="nama_mapel"
+                                    type="text" 
+                                    value={data.nama_mapel} 
+                                    onChange={e => setData('nama_mapel', e.target.value)} 
+                                    className="mt-1 block w-full" 
+                                />
+                                <InputError message={errors.nama_mapel} className="mt-2" />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
-                            <textarea value={data.deskripsi} onChange={e => setData('deskripsi', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" rows="4"></textarea>
-                            <InputError message={errors.deskripsi} className="mt-1" />
+                            <InputLabel htmlFor="deskripsi" value="Deskripsi" />
+                            <FormTextarea 
+                                id="deskripsi"
+                                value={data.deskripsi} 
+                                onChange={e => setData('deskripsi', e.target.value)} 
+                                className="mt-1 block w-full" 
+                                rows="4"
+                            />
+                            <InputError message={errors.deskripsi} className="mt-2" />
                         </div>
-                        <div className="flex gap-4 pt-6 border-t border-gray-200">
-                            <button type="submit" disabled={processing} className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-8 rounded-lg transition disabled:opacity-50">
-                                {processing ? '⏳ Menyimpan...' : '💾 Update'}
-                            </button>
-                            <Link href={route('admin.mapel.index')} className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-2 px-8 rounded-lg transition">❌ Batal</Link>
+                        <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+                            <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
+                                {processing ? '⏳ Menyimpan...' : '💾 Update Data'}
+                            </PrimaryButton>
+                            <Link href={route('admin.mapel.index')} className="w-full sm:w-auto">
+                                <SecondaryButton type="button" className="justify-center py-2.5 w-full">
+                                    ❌ Batal
+                                </SecondaryButton>
+                            </Link>
                         </div>
                     </form>
                 </div>

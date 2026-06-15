@@ -1,5 +1,7 @@
 import { Head } from '@inertiajs/react';
 import AdminLayout from './Components/Layouts/AdminLayout';
+import DataTableWrapper from '@/Components/DataTableWrapper';
+import EmptyState from '@/Components/EmptyState';
 
 export default function Dashboard({ stats, recentSantri }) {
     return (
@@ -8,65 +10,70 @@ export default function Dashboard({ stats, recentSantri }) {
             
             <div className="space-y-6">
                 {/* Welcome Section */}
-                <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 rounded-xl p-8 text-white shadow-lg">
-                    <h1 className="text-4xl font-bold mb-2">Dashboard Admin</h1>
-                    <p className="text-blue-100 text-lg">Sistem Informasi Akademik Pesantren - Kelola data pesantren dengan mudah</p>
+                <div className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-800 rounded-xl p-8 text-white shadow-sm border border-emerald-900/10">
+                    <h1 className="text-3xl sm:text-4xl font-bold mb-2">Dashboard Admin</h1>
+                    <p className="text-emerald-50 text-lg">Sistem Informasi Akademik Pesantren - Kelola data pesantren dengan mudah</p>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[
-                        { title: 'Total Santri', value: stats?.totalSantri ?? 0, icon: '👥', bg: 'bg-blue-50', border: 'border-blue-400', text: 'text-blue-600' },
-                        { title: 'Total Ustadz', value: stats?.totalUstadz ?? 0, icon: '👨‍🏫', bg: 'bg-green-50', border: 'border-green-400', text: 'text-green-600' },
-                        { title: 'Mata Pelajaran', value: stats?.totalMapel ?? 0, icon: '📚', bg: 'bg-purple-50', border: 'border-purple-400', text: 'text-purple-600' },
-                        { title: 'Jadwal Aktif', value: stats?.totalJadwal ?? 0, icon: '📅', bg: 'bg-orange-50', border: 'border-orange-400', text: 'text-orange-600' },
+                        { title: 'Total Santri', value: stats?.totalSantri ?? 0, icon: '👥', bg: 'bg-white', border: 'border-blue-400', text: 'text-blue-600', iconBg: 'bg-blue-50' },
+                        { title: 'Total Ustadz', value: stats?.totalUstadz ?? 0, icon: '👨‍🏫', bg: 'bg-white', border: 'border-emerald-400', text: 'text-emerald-600', iconBg: 'bg-emerald-50' },
+                        { title: 'Mata Pelajaran', value: stats?.totalMapel ?? 0, icon: '📚', bg: 'bg-white', border: 'border-purple-400', text: 'text-purple-600', iconBg: 'bg-purple-50' },
+                        { title: 'Jadwal Aktif', value: stats?.totalJadwal ?? 0, icon: '📅', bg: 'bg-white', border: 'border-orange-400', text: 'text-orange-600', iconBg: 'bg-orange-50' },
                     ].map((s, i) => (
-                        <div key={i} className={`${s.bg} border-l-4 ${s.border} rounded-lg p-6 shadow-md hover:shadow-lg transition transform hover:scale-105`}>
-                            <div className="flex items-start justify-between">
+                        <div key={i} className={`${s.bg} border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group`}>
+                            <div className={`absolute top-0 right-0 w-2 h-full ${s.iconBg} ${s.border} border-l-4 opacity-50 group-hover:opacity-100 transition-opacity`}></div>
+                            <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">{s.title}</p>
+                                    <p className="text-slate-500 text-sm font-semibold uppercase tracking-wider">{s.title}</p>
                                     <p className={`${s.text} text-4xl font-bold mt-2`}>{s.value}</p>
                                 </div>
-                                <span className="text-4xl opacity-60">{s.icon}</span>
+                                <div className={`w-14 h-14 rounded-full ${s.iconBg} flex items-center justify-center text-3xl shadow-sm`}>
+                                    {s.icon}
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
                 {/* Recent Santri */}
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                        <h2 className="text-xl font-bold text-white">📋 Santri Terbaru Terdaftar</h2>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <span>📋</span> Santri Terbaru Terdaftar
+                        </h2>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Nama</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">NIS</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Kelas</th>
-                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Status</th>
+                    <DataTableWrapper>
+                        <thead className="bg-white border-b border-slate-200">
+                            <tr>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Nama</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">NIS</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Kelas</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                            {(recentSantri ?? []).map((s) => (
+                                <tr key={s.id} className="hover:bg-slate-50 transition-colors">
+                                    <td className="px-6 py-4 text-sm text-slate-900 font-semibold">{s.nama}</td>
+                                    <td className="px-6 py-4 text-sm text-slate-600">{s.nis}</td>
+                                    <td className="px-6 py-4 text-sm">
+                                        <span className="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 rounded-full text-xs font-semibold">{s.kelas}</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
+                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 capitalize">
+                                            {s.status}
+                                        </span>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {(recentSantri ?? []).map((s) => (
-                                    <tr key={s.id} className="hover:bg-gray-50 transition">
-                                        <td className="px-6 py-4 text-sm text-gray-900 font-medium">{s.nama}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-600">{s.nis}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-600">{s.kelas}</td>
-                                        <td className="px-6 py-4 text-sm">
-                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                                                {s.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {(!recentSantri || recentSantri.length === 0) && (
-                                    <tr><td colSpan="4" className="px-6 py-4 text-center text-gray-500">Belum ada data santri.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                            {(!recentSantri || recentSantri.length === 0) && (
+                                <EmptyState title="Belum Ada Santri" description="Data santri terbaru akan muncul di sini." colSpan={4} />
+                            )}
+                        </tbody>
+                    </DataTableWrapper>
                 </div>
             </div>
         </AdminLayout>

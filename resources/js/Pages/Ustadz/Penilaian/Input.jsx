@@ -1,6 +1,11 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import UstadzLayout from '../Components/Layouts/UstadzLayout';
 import InputError from '@/Components/InputError';
+import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
+import DataTableWrapper from '@/Components/DataTableWrapper';
+import EmptyState from '@/Components/EmptyState';
 
 export default function PenilaianInput({ subject, santris, existingGrades }) {
     // Initialize grades from existing data or empty
@@ -40,57 +45,59 @@ export default function PenilaianInput({ subject, santris, existingGrades }) {
             <Head title="Input Penilaian" />
             
             <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <Link href={route('ustadz.penilaian.index')} className="text-amber-600 hover:text-amber-800">← Kembali</Link>
-                    <h1 className="text-3xl font-bold text-gray-900">Input Penilaian - {subject.nama_mapel}</h1>
+                <div className="flex items-center gap-4 mb-6">
+                    <Link href={route('ustadz.penilaian.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Penilaian">← Kembali</Link>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Input Penilaian - {subject.nama_mapel}</h1>
                 </div>
 
-                {errors.grades && <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">{errors.grades}</div>}
+                {errors.grades && <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-sm" role="alert"><p className="font-medium">Kesalahan Input</p><p className="text-sm">{errors.grades}</p></div>}
 
-                <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <form onSubmit={submit}>
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-200">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nama Santri</th>
-                                        <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900">Tugas</th>
-                                        <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900">UTS</th>
-                                        <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900">UAS</th>
-                                        <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900">Rata-rata</th>
+                        <DataTableWrapper>
+                            <thead className="bg-slate-100 border-b border-slate-200">
+                                <tr>
+                                    <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Nama Santri</th>
+                                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">Tugas</th>
+                                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">UTS</th>
+                                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">UAS</th>
+                                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">Rata-rata</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 bg-white">
+                                {(santris ?? []).map((s, idx) => (
+                                    <tr key={s.id} className="hover:bg-slate-50 transition-colors">
+                                        <td className="px-6 py-4 font-semibold text-slate-900">{s.nama} <span className="text-slate-400 text-xs font-normal">({s.nis})</span></td>
+                                        <td className="px-6 py-4">
+                                            <TextInput type="number" min="0" max="100" value={data.grades[idx]?.tugas ?? ''} onChange={e => updateGrade(idx, 'tugas', e.target.value)} className="w-20 text-center mx-auto block" aria-label={`Nilai Tugas ${s.nama}`} />
+                                            <InputError message={errors[`grades.${idx}.tugas`]} className="mt-1 text-center" />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <TextInput type="number" min="0" max="100" value={data.grades[idx]?.uts ?? ''} onChange={e => updateGrade(idx, 'uts', e.target.value)} className="w-20 text-center mx-auto block" aria-label={`Nilai UTS ${s.nama}`} />
+                                            <InputError message={errors[`grades.${idx}.uts`]} className="mt-1 text-center" />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <TextInput type="number" min="0" max="100" value={data.grades[idx]?.uas ?? ''} onChange={e => updateGrade(idx, 'uas', e.target.value)} className="w-20 text-center mx-auto block" aria-label={`Nilai UAS ${s.nama}`} />
+                                            <InputError message={errors[`grades.${idx}.uas`]} className="mt-1 text-center" />
+                                        </td>
+                                        <td className="px-6 py-4 text-center font-bold text-emerald-600">{calcAvg(data.grades[idx] || {})}</td>
                                     </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200">
-                                    {(santris ?? []).map((s, idx) => (
-                                        <tr key={s.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 font-semibold text-gray-900">{s.nama} <span className="text-gray-400 text-xs">({s.nis})</span></td>
-                                            <td className="px-6 py-4 text-center">
-                                                <input type="number" min="0" max="100" value={data.grades[idx]?.tugas ?? ''} onChange={e => updateGrade(idx, 'tugas', e.target.value)} className="w-20 border border-gray-300 rounded px-2 py-1 text-center" />
-                                                <InputError message={errors[`grades.${idx}.tugas`]} className="mt-1" />
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <input type="number" min="0" max="100" value={data.grades[idx]?.uts ?? ''} onChange={e => updateGrade(idx, 'uts', e.target.value)} className="w-20 border border-gray-300 rounded px-2 py-1 text-center" />
-                                                <InputError message={errors[`grades.${idx}.uts`]} className="mt-1" />
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <input type="number" min="0" max="100" value={data.grades[idx]?.uas ?? ''} onChange={e => updateGrade(idx, 'uas', e.target.value)} className="w-20 border border-gray-300 rounded px-2 py-1 text-center" />
-                                                <InputError message={errors[`grades.${idx}.uas`]} className="mt-1" />
-                                            </td>
-                                            <td className="px-6 py-4 text-center font-semibold text-blue-600">{calcAvg(data.grades[idx] || {})}</td>
-                                        </tr>
-                                    ))}
-                                    {(!santris || santris.length === 0) && (
-                                        <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-500">Tidak ada santri untuk mapel ini.</td></tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
+                                ))}
+                                {(!santris || santris.length === 0) && (
+                                    <EmptyState title="Tidak Ada Santri" description="Tidak ada santri untuk mapel ini." colSpan={5} />
+                                )}
+                            </tbody>
+                        </DataTableWrapper>
 
-                        <div className="mt-6 flex gap-4">
-                            <button type="submit" disabled={processing} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-8 rounded-lg transition disabled:opacity-50">
+                        <div className="p-6 flex flex-col sm:flex-row gap-3 border-t border-gray-100 bg-gray-50">
+                            <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
                                 {processing ? '⏳ Menyimpan...' : '💾 Simpan Nilai'}
-                            </button>
-                            <Link href={route('ustadz.penilaian.index')} className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-2 px-8 rounded-lg transition">❌ Batal</Link>
+                            </PrimaryButton>
+                            <Link href={route('ustadz.penilaian.index')} className="w-full sm:w-auto">
+                                <SecondaryButton type="button" className="justify-center py-2.5 w-full">
+                                    ❌ Batal
+                                </SecondaryButton>
+                            </Link>
                         </div>
                     </form>
                 </div>

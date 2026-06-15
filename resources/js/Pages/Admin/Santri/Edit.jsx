@@ -1,6 +1,12 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AdminLayout from '../Components/Layouts/AdminLayout';
 import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import TextInput from '@/Components/TextInput';
+import FormSelect from '@/Components/FormSelect';
+import FormTextarea from '@/Components/FormTextarea';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
 
 export default function SantriEdit({ santri }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -26,83 +32,87 @@ export default function SantriEdit({ santri }) {
             <Head title="Edit Santri" />
             
             <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <Link href={route('admin.santri.index')} className="text-green-600 hover:text-green-800">← Kembali</Link>
-                    <h1 className="text-3xl font-bold text-gray-900">Edit Data Santri</h1>
+                <div className="flex items-center gap-4 mb-6">
+                    <Link href={route('admin.santri.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Santri">← Kembali</Link>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Edit Data Santri</h1>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-3xl">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-3xl">
                     <form onSubmit={submit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">NIS</label>
-                                <input type="text" value={data.nis} onChange={e => setData('nis', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.nis} className="mt-1" />
+                                <InputLabel htmlFor="nis" value="NIS" />
+                                <TextInput id="nis" type="text" value={data.nis} onChange={e => setData('nis', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.nis} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                                <input type="text" value={data.nama} onChange={e => setData('nama', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.nama} className="mt-1" />
+                                <InputLabel htmlFor="nama" value="Nama Lengkap" />
+                                <TextInput id="nama" type="text" value={data.nama} onChange={e => setData('nama', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.nama} className="mt-2" />
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin</label>
-                                <select value={data.jenis_kelamin} onChange={e => setData('jenis_kelamin', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <InputLabel htmlFor="jenis_kelamin" value="Jenis Kelamin" />
+                                <FormSelect id="jenis_kelamin" value={data.jenis_kelamin} onChange={e => setData('jenis_kelamin', e.target.value)} className="mt-1 block w-full">
                                     <option value="L">Laki-laki</option>
                                     <option value="P">Perempuan</option>
-                                </select>
-                                <InputError message={errors.jenis_kelamin} className="mt-1" />
+                                </FormSelect>
+                                <InputError message={errors.jenis_kelamin} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir</label>
-                                <input type="date" value={data.tanggal_lahir} onChange={e => setData('tanggal_lahir', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.tanggal_lahir} className="mt-1" />
+                                <InputLabel htmlFor="tanggal_lahir" value="Tanggal Lahir" />
+                                <TextInput id="tanggal_lahir" type="date" value={data.tanggal_lahir} onChange={e => setData('tanggal_lahir', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.tanggal_lahir} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Kelas</label>
-                                <input type="text" value={data.kelas} onChange={e => setData('kelas', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.kelas} className="mt-1" />
+                                <InputLabel htmlFor="kelas" value="Kelas" />
+                                <TextInput id="kelas" type="text" value={data.kelas} onChange={e => setData('kelas', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.kelas} className="mt-2" />
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Program</label>
-                                <input type="text" value={data.program} onChange={e => setData('program', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.program} className="mt-1" />
+                                <InputLabel htmlFor="program" value="Program" />
+                                <TextInput id="program" type="text" value={data.program} onChange={e => setData('program', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.program} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                                <select value={data.status} onChange={e => setData('status', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <InputLabel htmlFor="status" value="Status" />
+                                <FormSelect id="status" value={data.status} onChange={e => setData('status', e.target.value)} className="mt-1 block w-full">
                                     <option value="aktif">Aktif</option>
                                     <option value="alumni">Alumni</option>
                                     <option value="keluar">Keluar</option>
-                                </select>
-                                <InputError message={errors.status} className="mt-1" />
+                                </FormSelect>
+                                <InputError message={errors.status} className="mt-2" />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Alamat</label>
-                            <textarea value={data.alamat} onChange={e => setData('alamat', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" rows="3"></textarea>
-                            <InputError message={errors.alamat} className="mt-1" />
+                            <InputLabel htmlFor="alamat" value="Alamat" />
+                            <FormTextarea id="alamat" value={data.alamat} onChange={e => setData('alamat', e.target.value)} className="mt-1 block w-full" rows="3" />
+                            <InputError message={errors.alamat} className="mt-2" />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                                <input type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.email} className="mt-1" />
+                                <InputLabel htmlFor="email" value="Email (opsional)" />
+                                <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.email} className="mt-2" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Telepon</label>
-                                <input type="text" value={data.telepon} onChange={e => setData('telepon', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
-                                <InputError message={errors.telepon} className="mt-1" />
+                                <InputLabel htmlFor="telepon" value="Telepon (opsional)" />
+                                <TextInput id="telepon" type="text" value={data.telepon} onChange={e => setData('telepon', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.telepon} className="mt-2" />
                             </div>
                         </div>
-                        <div className="flex gap-4 pt-6 border-t border-gray-200">
-                            <button type="submit" disabled={processing} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-8 rounded-lg transition disabled:opacity-50">
-                                {processing ? '⏳ Menyimpan...' : '💾 Update'}
-                            </button>
-                            <Link href={route('admin.santri.index')} className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-2 px-8 rounded-lg transition">❌ Batal</Link>
+                        <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+                            <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
+                                {processing ? '⏳ Menyimpan...' : '💾 Update Data'}
+                            </PrimaryButton>
+                            <Link href={route('admin.santri.index')} className="w-full sm:w-auto">
+                                <SecondaryButton type="button" className="justify-center py-2.5 w-full">
+                                    ❌ Batal
+                                </SecondaryButton>
+                            </Link>
                         </div>
                     </form>
                 </div>

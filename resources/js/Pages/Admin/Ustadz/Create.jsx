@@ -1,6 +1,10 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AdminLayout from '../Components/Layouts/AdminLayout';
 import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
 
 export default function UstadzCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -19,33 +23,58 @@ export default function UstadzCreate() {
             <Head title="Tambah Ustadz" />
             
             <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                    <Link href={route('admin.ustadz.index')} className="text-blue-600 hover:text-blue-800">← Kembali</Link>
-                    <h1 className="text-3xl font-bold text-gray-900">Tambah Ustadz Baru</h1>
+                <div className="flex items-center gap-4 mb-6">
+                    <Link href={route('admin.ustadz.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Ustadz">← Kembali</Link>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Tambah Ustadz Baru</h1>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
                     <form onSubmit={submit} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                            <input type="text" value={data.name} onChange={e => setData('name', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" placeholder="Masukkan nama ustadz" />
-                            <InputError message={errors.name} className="mt-1" />
+                            <InputLabel htmlFor="name" value="Nama Lengkap" />
+                            <TextInput 
+                                id="name"
+                                type="text" 
+                                value={data.name} 
+                                onChange={e => setData('name', e.target.value)} 
+                                className="mt-1 block w-full" 
+                                placeholder="Masukkan nama ustadz" 
+                            />
+                            <InputError message={errors.name} className="mt-2" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                            <input type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" placeholder="Email ustadz" />
-                            <InputError message={errors.email} className="mt-1" />
+                            <InputLabel htmlFor="email" value="Email" />
+                            <TextInput 
+                                id="email"
+                                type="email" 
+                                value={data.email} 
+                                onChange={e => setData('email', e.target.value)} 
+                                className="mt-1 block w-full" 
+                                placeholder="Email ustadz" 
+                            />
+                            <InputError message={errors.email} className="mt-2" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                            <input type="password" value={data.password} onChange={e => setData('password', e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" placeholder="Minimal 8 karakter" />
-                            <InputError message={errors.password} className="mt-1" />
+                            <InputLabel htmlFor="password" value="Password" />
+                            <TextInput 
+                                id="password"
+                                type="password" 
+                                value={data.password} 
+                                onChange={e => setData('password', e.target.value)} 
+                                className="mt-1 block w-full" 
+                                placeholder="Minimal 8 karakter" 
+                            />
+                            <InputError message={errors.password} className="mt-2" />
                         </div>
-                        <div className="flex gap-4 pt-6 border-t border-gray-200">
-                            <button type="submit" disabled={processing} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg transition disabled:opacity-50">
-                                {processing ? '⏳ Menyimpan...' : '💾 Simpan'}
-                            </button>
-                            <Link href={route('admin.ustadz.index')} className="bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold py-2 px-8 rounded-lg transition">❌ Batal</Link>
+                        <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+                            <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
+                                {processing ? '⏳ Menyimpan...' : '💾 Simpan Data'}
+                            </PrimaryButton>
+                            <Link href={route('admin.ustadz.index')} className="w-full sm:w-auto">
+                                <SecondaryButton type="button" className="justify-center py-2.5 w-full">
+                                    ❌ Batal
+                                </SecondaryButton>
+                            </Link>
                         </div>
                     </form>
                 </div>
