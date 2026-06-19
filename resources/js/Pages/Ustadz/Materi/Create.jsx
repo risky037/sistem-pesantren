@@ -21,6 +21,7 @@ export default function MateriCreate({ subjects }) {
 
     const submit = (e) => {
         e.preventDefault();
+        // UBAH DI SINI: Tambahkan awalan ustadz.
         post(route('ustadz.materi.store'), {
             forceFormData: true,
         });
@@ -32,6 +33,7 @@ export default function MateriCreate({ subjects }) {
             
             <div className="space-y-6">
                 <div className="flex items-center gap-4 mb-6">
+                    {/* UBAH DI SINI: Tambahkan awalan ustadz. */}
                     <Link href={route('ustadz.materi.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Materi">← Kembali</Link>
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Tambah Materi Ajar</h1>
                 </div>
@@ -116,6 +118,7 @@ export default function MateriCreate({ subjects }) {
                                     <><Icon name="save" className="w-5 h-5 mr-2" /> Simpan Data</>
                                 )}
                             </PrimaryButton>
+                            {/* UBAH DI SINI: Tambahkan awalan ustadz. */}
                             <Link href={route('ustadz.materi.index')} className="w-full sm:w-auto">
                                 <SecondaryButton type="button" className="justify-center py-2.5 w-full">
                                     <Icon name="cancel" className="w-5 h-5 mr-2" />

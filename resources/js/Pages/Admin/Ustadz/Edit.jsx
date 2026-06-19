@@ -8,7 +8,8 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import Icon from '@/Components/Icon';
 
 export default function UstadzEdit({ ustadz }) {
-    const { data, setData, put, processing, errors } = useForm({
+    // Tambahkan recentlySuccessful di sini
+    const { data, setData, put, processing, errors, recentlySuccessful } = useForm({
         name: ustadz.name || '',
         email: ustadz.email || '',
         password: '',
@@ -16,7 +17,10 @@ export default function UstadzEdit({ ustadz }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('admin.ustadz.update', ustadz.id));
+        // Route disesuaikan dengan web.php (tanpa awalan admin.)
+        put(route('ustadz.update', ustadz.id), {
+            preserveScroll: true, // Agar halaman tidak scroll ke atas saat simpan
+        });
     };
 
     return (
@@ -25,11 +29,23 @@ export default function UstadzEdit({ ustadz }) {
             
             <div className="space-y-6">
                 <div className="flex items-center gap-4 mb-6">
-                    <Link href={route('admin.ustadz.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Ustadz">← Kembali</Link>
+                    {/* Route disesuaikan dengan web.php */}
+                    <Link href={route('ustadz.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Ustadz">← Kembali</Link>
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Edit Data Ustadz</h1>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
+                    
+                    {/* KOTAK PESAN BERHASIL */}
+                    {recentlySuccessful && (
+                        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-3 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="font-medium text-emerald-800">Data ustadz berhasil diperbarui!</span>
+                        </div>
+                    )}
+
                     <form onSubmit={submit} className="space-y-6">
                         <div>
                             <InputLabel htmlFor="name" value="Nama Lengkap" />
@@ -75,7 +91,7 @@ export default function UstadzEdit({ ustadz }) {
                                     <><Icon name="save" className="w-5 h-5 mr-2" /> Update Data</>
                                 )}
                             </PrimaryButton>
-                            <Link href={route('admin.ustadz.index')} className="w-full sm:w-auto">
+                            <Link href={route('ustadz.index')} className="w-full sm:w-auto">
                                 <SecondaryButton type="button" className="justify-center py-2.5 w-full">
                                     <Icon name="cancel" className="w-5 h-5 mr-2" />
                                     Batal

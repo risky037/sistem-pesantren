@@ -57,7 +57,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/jadwal/{id}', [AdminJadwalController::class, 'destroy'])->name('jadwal.destroy');
 });
 
-// Grup Rute Ustadz
+/// Grup Rute Ustadz
 Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [UstadzDashboardController::class, 'index'])->name('dashboard');

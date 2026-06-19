@@ -21,8 +21,17 @@ export default function UstadzIndex({ ustadzs }) {
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(route('admin.ustadz.destroy', id), {
-                    preserveScroll: true
+                // Rute disesuaikan dengan web.php
+                router.delete(route('ustadz.destroy', id), {
+                    preserveScroll: true,
+                    // Tambahkan onSuccess di sini untuk memunculkan popup berhasil
+                    onSuccess: () => {
+                        Swal.fire(
+                            'Terhapus!',
+                            `Data ustadz "${name}" berhasil dihapus.`,
+                            'success'
+                        );
+                    }
                 });
             }
         });
@@ -36,7 +45,7 @@ export default function UstadzIndex({ ustadzs }) {
                 <PageHeader 
                     title={<div className="flex items-center"><Icon name="teacher" className="w-7 h-7 mr-3 text-emerald-600" /> Manajemen Ustadz</div>} 
                     actionText="Tambah Ustadz" 
-                    actionHref={route('admin.ustadz.create')} 
+                    actionHref={route('ustadz.create')} // Rute disesuaikan
                 />
 
                 <DataTableWrapper>
@@ -56,7 +65,8 @@ export default function UstadzIndex({ ustadzs }) {
                                 <td className="px-6 py-4 text-sm text-slate-600">{u.email}</td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        <Link href={route('admin.ustadz.edit', u.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${u.name}`}>
+                                        {/* Rute disesuaikan */}
+                                        <Link href={route('ustadz.edit', u.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${u.name}`}>
                                             <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
                                         </Link>
                                         <button onClick={() => handleDelete(u.id, u.name)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${u.name}`}>

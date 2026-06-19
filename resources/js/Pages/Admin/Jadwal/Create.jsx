@@ -21,7 +21,8 @@ export default function JadwalCreate({ ustadzs, subjects }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('admin.jadwal.store'));
+        // Menggunakan rute jadwal.store sesuai dengan web.php
+        post(route('jadwal.store'));
     };
 
     return (
@@ -30,7 +31,8 @@ export default function JadwalCreate({ ustadzs, subjects }) {
             
             <div className="space-y-6">
                 <div className="flex items-center gap-4 mb-6">
-                    <Link href={route('admin.jadwal.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Jadwal">← Kembali</Link>
+                    {/* Menggunakan rute jadwal.index sesuai dengan web.php */}
+                    <Link href={route('jadwal.index')} className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors" aria-label="Kembali ke Daftar Jadwal">← Kembali</Link>
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Tambah Jadwal Kelas</h1>
                 </div>
 
@@ -93,7 +95,8 @@ export default function JadwalCreate({ ustadzs, subjects }) {
                                     <><Icon name="save" className="w-5 h-5 mr-2" /> Simpan Data</>
                                 )}
                             </PrimaryButton>
-                            <Link href={route('admin.jadwal.index')} className="w-full sm:w-auto">
+                            {/* Menggunakan rute jadwal.index sesuai dengan web.php */}
+                            <Link href={route('jadwal.index')} className="w-full sm:w-auto">
                                 <SecondaryButton type="button" className="justify-center py-2.5 w-full">
                                     <Icon name="cancel" className="w-5 h-5 mr-2" />
                                     Batal
