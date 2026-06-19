@@ -5,14 +5,62 @@ import PageHeader from '@/Components/PageHeader';
 import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import FormSelect from '@/Components/FormSelect';
+import { useForm, router } from '@inertiajs/react';
 
-export default function JadwalIndex({ jadwals }) {
+export default function JadwalIndex({ jadwals, filters, subjects }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+        hari: filters?.hari || '',
+        subject_id: filters?.subject_id || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('ustadz.jadwal.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('ustadz.jadwal.index'));
+    };
     return (
         <UstadzLayout>
             <Head title="Jadwal Mengajar" />
             
             <div className="space-y-6">
                 <PageHeader title={<div className="flex items-center"><Icon name="calendar" className="w-7 h-7 mr-3 text-emerald-600" /> Jadwal Mengajar Saya</div>} />
+
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari jadwal, ruang, kelas..."
+                >
+                    <FormSelect
+                        value={data.hari}
+                        onChange={(e) => setData('hari', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua Hari</option>
+                        {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map((h) => (
+                            <option key={h} value={h}>{h}</option>
+                        ))}
+                    </FormSelect>
+                    
+                    <FormSelect
+                        value={data.subject_id}
+                        onChange={(e) => setData('subject_id', e.target.value)}
+                        className="w-full md:w-48"
+                    >
+                        <option value="">Semua Mapel</option>
+                        {subjects.map((s) => (
+                            <option key={s.id} value={s.id}>{s.nama_mapel}</option>
+                        ))}
+                    </FormSelect>
+                </FilterBar>
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -37,7 +85,11 @@ export default function JadwalIndex({ jadwals }) {
                             </tr>
                         ))}
                         {jadwals.data.length === 0 && (
-                            <EmptyState title="Jadwal Kosong" description="Belum ada jadwal mengajar." colSpan={5} />
+                            <EmptyState 
+                                title="Jadwal Kosong" 
+                                description={(filters?.search || filters?.hari || filters?.subject_id) ? "Tidak ada jadwal yang cocok dengan pencarian/filter." : "Belum ada jadwal mengajar."} 
+                                colSpan={5} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

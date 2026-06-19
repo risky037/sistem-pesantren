@@ -35,17 +35,6 @@ export default function UstadzEdit({ ustadz }) {
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
-                    
-                    {/* KOTAK PESAN BERHASIL */}
-                    {recentlySuccessful && (
-                        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-3 transition-all duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span className="font-medium text-emerald-800">Data ustadz berhasil diperbarui!</span>
-                        </div>
-                    )}
-
                     <form onSubmit={submit} className="space-y-6">
                         <div>
                             <InputLabel htmlFor="name" value="Nama Lengkap" />

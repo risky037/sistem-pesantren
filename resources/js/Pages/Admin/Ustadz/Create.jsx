@@ -31,7 +31,7 @@ export default function UstadzCreate() {
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Tambah Ustadz Baru</h1>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-4xl">
                     <form onSubmit={submit} className="space-y-6">
                         <div>
                             <InputLabel htmlFor="name" value="Nama Lengkap" />

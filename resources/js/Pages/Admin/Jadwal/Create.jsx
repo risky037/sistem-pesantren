@@ -36,7 +36,7 @@ export default function JadwalCreate({ ustadzs, subjects }) {
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">Tambah Jadwal Kelas</h1>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-2xl">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 max-w-5xl">
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>

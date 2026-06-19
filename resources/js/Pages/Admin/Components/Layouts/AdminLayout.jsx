@@ -10,7 +10,8 @@ export default function AdminLayout({ children }) {
 
     // Derive a simple page title from the current URL
     const getPageTitle = () => {
-        const segments = url.replace(/^\/admin\/?/, '').split('/').filter(Boolean);
+        const cleanUrl = url.split('?')[0].split('#')[0];
+        const segments = cleanUrl.replace(/^\/admin\/?/, '').split('/').filter(Boolean);
         if (!segments.length || segments[0] === 'dashboard') return 'Dashboard';
         const titles = {
             ustadz: 'Kelola Ustadz',

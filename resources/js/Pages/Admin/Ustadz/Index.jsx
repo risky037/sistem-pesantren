@@ -7,8 +7,23 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import { useForm } from '@inertiajs/react';
 
-export default function UstadzIndex({ ustadzs }) {
+export default function UstadzIndex({ ustadzs, filters }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('admin.ustadz.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('admin.ustadz.index'));
+    };
     const handleDelete = (id, name) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -48,6 +63,14 @@ export default function UstadzIndex({ ustadzs }) {
                     actionHref={route('ustadz.create')} // Rute disesuaikan
                 />
 
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari nama atau email..."
+                />
+
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
                         <tr>
@@ -77,7 +100,11 @@ export default function UstadzIndex({ ustadzs }) {
                             </tr>
                         ))}
                         {ustadzs.data.length === 0 && (
-                            <EmptyState title="Data Ustadz Kosong" description="Belum ada ustadz yang terdaftar." colSpan={4} />
+                            <EmptyState 
+                                title="Data Ustadz Kosong" 
+                                description={filters?.search ? "Tidak ada ustadz yang cocok dengan pencarian." : "Belum ada ustadz yang terdaftar."}
+                                colSpan={4} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

@@ -17,6 +17,7 @@ export default function Pagination({ links }) {
                                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     }`}
                     preserveScroll
+                    preserveState
                     dangerouslySetInnerHTML={{ __html: link.label }}
                 />
             ))}

@@ -7,8 +7,37 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import FormSelect from '@/Components/FormSelect';
+import { useForm } from '@inertiajs/react';
 
-export default function MateriIndex({ materis }) {
+const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    return new Intl.DateTimeFormat('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }).format(date);
+};
+
+export default function MateriIndex({ materis, filters, subjects, kelasList }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+        subject_id: filters?.subject_id || '',
+        kelas: filters?.kelas || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('ustadz.materi.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('ustadz.materi.index'));
+    };
     const handleDelete = (id, judul) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -39,6 +68,36 @@ export default function MateriIndex({ materis }) {
                     actionHref={route('ustadz.materi.create')} 
                 />
 
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari judul, deskripsi, mapel, kelas..."
+                >
+                    <FormSelect
+                        value={data.subject_id}
+                        onChange={(e) => setData('subject_id', e.target.value)}
+                        className="w-full md:w-48"
+                    >
+                        <option value="">Semua Mapel</option>
+                        {subjects.map((s) => (
+                            <option key={s.id} value={s.id}>{s.nama_mapel}</option>
+                        ))}
+                    </FormSelect>
+
+                    <FormSelect
+                        value={data.kelas}
+                        onChange={(e) => setData('kelas', e.target.value)}
+                        className="w-full md:w-40"
+                    >
+                        <option value="">Semua Kelas</option>
+                        {kelasList.map((k) => (
+                            <option key={k} value={k}>{k}</option>
+                        ))}
+                    </FormSelect>
+                </FilterBar>
+
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
                         <tr>
@@ -63,7 +122,7 @@ export default function MateriIndex({ materis }) {
                                         <a href={`/storage/${m.file_path}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline inline-flex items-center" aria-label={`Unduh ${m.original_file_name}`}><Icon name="file" className="w-4 h-4 mr-1.5" /> {m.original_file_name}</a>
                                     ) : '-'}
                                 </td>
-                                <td className="px-6 py-4 text-slate-600 text-sm">{m.published_at || '-'}</td>
+                                <td className="px-6 py-4 text-slate-600 text-sm">{formatDate(m.published_at)}</td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
                                         <Link href={route('ustadz.materi.edit', m.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${m.judul}`}>
@@ -77,7 +136,11 @@ export default function MateriIndex({ materis }) {
                             </tr>
                         ))}
                         {materis.data.length === 0 && (
-                            <EmptyState title="Data Materi Kosong" description="Belum ada materi." colSpan={6} />
+                            <EmptyState 
+                                title="Data Materi Kosong" 
+                                description={(filters?.search || filters?.subject_id || filters?.kelas) ? "Tidak ada materi yang cocok dengan pencarian/filter." : "Belum ada materi."} 
+                                colSpan={6} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

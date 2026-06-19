@@ -5,14 +5,37 @@ import DataTableWrapper from '@/Components/DataTableWrapper';
 import EmptyState from '@/Components/EmptyState';
 import ActionButtons from '@/Components/ActionButtons';
 import Icon from '@/Components/Icon';
+import FilterBar from '@/Components/FilterBar';
+import { useForm, router } from '@inertiajs/react';
 
-export default function PenilaianIndex({ summary }) {
+export default function PenilaianIndex({ summary, filters }) {
+    const { data, setData, get, reset } = useForm({
+        search: filters?.search || '',
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route('ustadz.penilaian.index'), { preserveState: true, preserveScroll: true });
+    };
+
+    const handleReset = () => {
+        reset();
+        router.get(route('ustadz.penilaian.index'));
+    };
     return (
         <UstadzLayout>
             <Head title="Penilaian" />
             
             <div className="space-y-6">
                 <PageHeader title={<div className="flex items-center"><Icon name="check" className="w-7 h-7 mr-3 text-emerald-600" /> Manajemen Penilaian</div>} />
+
+                <FilterBar 
+                    searchQuery={data.search}
+                    onSearchChange={(e) => setData('search', e.target.value)}
+                    onSubmit={handleSearch}
+                    onReset={handleReset}
+                    searchPlaceholder="Cari mapel atau kelas..."
+                />
 
                 <DataTableWrapper>
                     <thead className="bg-slate-100 border-b border-slate-200">
@@ -55,7 +78,11 @@ export default function PenilaianIndex({ summary }) {
                             );
                         })}
                         {(!summary || summary.length === 0) && (
-                            <EmptyState title="Data Mapel Kosong" description="Belum ada mata pelajaran yang diampu." colSpan={6} />
+                            <EmptyState 
+                                title="Data Mapel Kosong" 
+                                description={filters?.search ? "Tidak ada mapel yang cocok dengan pencarian." : "Belum ada mata pelajaran yang diampu."} 
+                                colSpan={6} 
+                            />
                         )}
                     </tbody>
                 </DataTableWrapper>

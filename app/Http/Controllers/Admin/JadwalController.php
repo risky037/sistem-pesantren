@@ -12,14 +12,42 @@ use Inertia\Inertia;
 
 class JadwalController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        $filters = $request->only(['search', 'hari', 'subject_id', 'user_id']);
+
         $jadwals = Jadwal::with(['ustadz', 'subject'])
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('hari', 'like', '%' . $search . '%')
+                      ->orWhere('kelas', 'like', '%' . $search . '%')
+                      ->orWhere('ruang', 'like', '%' . $search . '%')
+                      ->orWhereHas('ustadz', function ($q2) use ($search) {
+                          $q2->where('name', 'like', '%' . $search . '%');
+                      })
+                      ->orWhereHas('subject', function ($q3) use ($search) {
+                          $q3->where('nama_mapel', 'like', '%' . $search . '%');
+                      });
+                });
+            })
+            ->when($filters['hari'] ?? null, function ($query, $hari) {
+                $query->where('hari', $hari);
+            })
+            ->when($filters['subject_id'] ?? null, function ($query, $subjectId) {
+                $query->where('subject_id', $subjectId);
+            })
+            ->when($filters['user_id'] ?? null, function ($query, $userId) {
+                $query->where('user_id', $userId);
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Admin/Jadwal/Index', [
             'jadwals' => $jadwals,
+            'filters' => $filters,
+            'subjects' => Subject::select('id', 'nama_mapel')->orderBy('nama_mapel')->get(),
+            'ustadzs' => User::where('role', 'ustadz')->select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
