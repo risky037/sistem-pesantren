@@ -1,1 +1,0 @@
-import{t as e}from"./app-vbgbJsfl.js";var t=e();function n({children:e}){return(0,t.jsx)(`div`,{className:`flex flex-col sm:flex-row items-center justify-center gap-2`,children:e})}export{n as t};
