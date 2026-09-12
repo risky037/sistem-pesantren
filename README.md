@@ -1,58 +1,65 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Pesantren
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Pesantren is a practical pesantren management and learning system designed to streamline daily academic workflows for Admins, Ustadz, and Santri. The system provides core master data management, academic scheduling, and will evolve to include LMS-like capabilities such as flexible assessments and grading.
 
-## About Laravel
+> [!WARNING]
+> **This project is currently under active development.** It is not production-ready. Do not deploy this application to a public environment yet as there are known security risks and incomplete features (notably, public registration currently defaults to the privileged `ustadz` role).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Technology Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The project repository specifies the following core package constraints:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+*   **Language:** PHP `^8.3` *(Audited local runtime: PHP 8.4.16)*
+*   **Backend Framework:** Laravel `^13.8` *(Audited local runtime: Laravel 13.15.0)*
+*   **Client-Side Bridge:** Inertia.js v2 (`inertiajs/inertia-laravel` `^2.0`, `@inertiajs/react` `^2.0`)
+*   **Frontend Library:** React 18 (`^18.2.0`)
+*   **Styling:** Tailwind CSS 3.4 (`^3.4.19`)
+*   **Feedback & Alerts:** SweetAlert2 (`^11.26.25`)
 
-## Learning Laravel
+### Database Strategy
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+*   **Intended Deployment Database:** MySQL (production target for institutional persistence).
+*   **Local Development & Testing Configuration:** SQLite (configured as default in `.env.example` and utilized for rapid automated test runs).
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Current Roles
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+The system is designed for three main institutional actors:
+*   **Admin:** Manages core master data (Users, Santri, Subjects, Schedules).
+*   **Ustadz:** Manages learning materials, views assigned schedules, and inputs grades.
+*   **Santri:** *(Planned)* Will access an authenticated portal to view schedules, download materials, and submit assignments.
 
-## Agentic Development
+## Setup Instructions
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1.  Clone the repository.
+2.  Install PHP dependencies: `composer install`
+3.  Install NPM dependencies: `npm ci`
+4.  Copy environment file: `cp .env.example .env`
+5.  Generate application key: `php artisan key:generate`
+6.  Run database migrations: `php artisan migrate:fresh`
+7.  Build frontend assets: `npm run build`
+8.  Serve the application: `php artisan serve`
 
-```bash
-composer require laravel/boost --dev
+## Development Commands
 
-php artisan boost:install
-```
+*   `npm run dev`: Run Vite development server for client assets.
+*   `php artisan test`: Run the PHPUnit test suite.
+*   `php artisan route:list`: View all registered routes and middleware.
+*   `vendor/bin/pint --format agent`: Run Laravel Pint code formatter.
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Project Structure
 
-## Contributing
+*   `app/Models`: Eloquent models representing domain records.
+*   `app/Http/Controllers/Admin`: Controllers handling administrative CRUD workflows.
+*   `app/Http/Controllers/Ustadz`: Controllers handling academic and teaching workflows.
+*   `resources/js/Pages`: Inertia React page components organized by actor role.
+*   `docs/`: Official recovery and architecture documentation.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Documentation
 
-## Code of Conduct
+*   [Product Requirements Document (PRD)](docs/PRD.md)
+*   [Current State & Technical Audit](docs/CURRENT_STATE.md)
+*   [Architecture & Design Guide](docs/DESIGN.md)
+*   [Development Roadmap](docs/ROADMAP.md)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+> [!NOTE]
+> **Legacy Documentation Notice:** Older documentation files in the repository root (`IMPLEMENTATION_SUMMARY.md` and `MENU_CRUD_GUIDE.md`) represent earlier unverified AI-generated summaries and contain stale or inaccurate claims. They are retained solely for historical reference; the files under `docs/` serve as the authoritative project baseline.

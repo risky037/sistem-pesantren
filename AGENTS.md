@@ -1,3 +1,22 @@
+<project-specific-rules>
+# Sistem Pesantren - Agent Rules
+
+- **Required Docs**: You must read `docs/PRD.md`, `docs/CURRENT_STATE.md`, `docs/DESIGN.md`, and `docs/ROADMAP.md` before starting any implementation.
+- **Design Language**: Preserve the existing Tailwind CSS design language. Do not introduce shadcn/ui or external UI libraries without an explicit product decision.
+- **Component Reuse**: Use existing components before creating new primitives. Do not mix UI redesign with feature work.
+- **UI Feedback Consistency**: Prefer SweetAlert for consistent confirmation, success, error, and destructive-action interactions where existing project patterns support it.
+- **Scalability & Query Efficiency**: Paginate potentially growing lists. Avoid N+1 queries by eager loading relationships. Keep Inertia props bounded. Add database indexes based on demonstrated query paths.
+- **No Speculative Infrastructure**: Do not introduce caching, queues, or distributed infrastructure speculatively without demonstrated and measurable need.
+- **No Unjustified Abstractions**: Inspect existing patterns before adding architectural abstractions. Do not introduce repository/service/interface layers without demonstrated need.
+- **No Dependency Additions**: Do not add new dependencies without explicit justification and user approval.
+- **Security First**: Authorization and validation are strictly required for any behavior changes.
+- **Definition of Done**: Tests are part of the definition of done. Do not skip testing business-critical behavior.
+- **Focus**: Do not make unrelated changes outside the scope of the immediate task.
+- **Migration Policy**: During the active development phase, editing existing migration files and running `migrate:fresh` is allowed. After production release, historical migrations become immutable.
+- **Honesty**: Report verification honestly. Never mark incomplete work complete.
+
+</project-specific-rules>
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
