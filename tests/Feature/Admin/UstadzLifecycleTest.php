@@ -10,6 +10,7 @@ use App\Models\Santri;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UstadzLifecycleTest extends TestCase
@@ -111,7 +112,7 @@ class UstadzLifecycleTest extends TestCase
     public function test_admin_cannot_delete_ustadz_with_penilaian_records(): void
     {
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
-        $santri = \App\Models\Santri::factory()->create([
+        $santri = Santri::factory()->create([
             'nis' => '12345',
             'nama' => 'Test Santri',
             'jenis_kelamin' => 'L',
@@ -141,5 +142,31 @@ class UstadzLifecycleTest extends TestCase
         $response->assertRedirect('/admin/ustadz');
         $response->assertSessionHas('success');
         $this->assertNull($this->ustadz->fresh());
+    }
+
+    public function test_admin_can_reset_ustadz_password(): void
+    {
+        $payload = [
+            'password' => 'SecurePa$$w0rd2026!',
+            'password_confirmation' => 'SecurePa$$w0rd2026!',
+        ];
+
+        $response = $this->actingAs($this->admin)->post(route('admin.ustadz.reset-password', $this->ustadz->id), $payload);
+
+        $response->assertRedirect(route('admin.ustadz.index'));
+
+        $this->ustadz->refresh();
+        $this->assertTrue(Hash::check('SecurePa$$w0rd2026!', $this->ustadz->password));
+    }
+
+    public function test_non_admin_cannot_reset_ustadz_password(): void
+    {
+        $payload = [
+            'password' => 'SecurePa$$w0rd2026!',
+            'password_confirmation' => 'SecurePa$$w0rd2026!',
+        ];
+
+        $this->actingAs($this->ustadz)->post(route('admin.ustadz.reset-password', $this->ustadz->id), $payload)
+            ->assertStatus(403);
     }
 }
