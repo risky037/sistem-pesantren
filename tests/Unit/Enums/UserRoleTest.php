@@ -20,7 +20,7 @@ class UserRoleTest extends TestCase
     {
         $this->assertSame('admin.dashboard', UserRole::Admin->dashboardRouteName());
         $this->assertSame('ustadz.dashboard', UserRole::Ustadz->dashboardRouteName());
-        $this->assertNull(UserRole::Santri->dashboardRouteName());
+        $this->assertSame('santri.dashboard', UserRole::Santri->dashboardRouteName());
     }
 
     public function test_user_role_enum_defensive_hydration(): void

@@ -16,7 +16,7 @@ enum UserRole: string
         return match ($this) {
             self::Admin => 'admin.dashboard',
             self::Ustadz => 'ustadz.dashboard',
-            self::Santri => null,
+            self::Santri => 'santri.dashboard',
         };
     }
 }

@@ -91,4 +91,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+// Grup Rute Santri
+Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Santri/Dashboard');
+    })->name('dashboard');
+});
+
 require __DIR__.'/auth.php';

@@ -93,12 +93,14 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('admin.dashboard', absolute: false));
     }
 
-    public function test_verified_santri_sending_verification_notification_fails_closed(): void
+    public function test_verified_santri_sending_verification_notification_redirects_to_santri_dashboard(): void
     {
-        $santri = User::factory()->santri()->create();
+        $santriUser = User::factory()->create();
+        $santriUser->role = 'santri';
+        $santriUser->save();
 
-        $response = $this->actingAs($santri)->post('/email/verification-notification');
+        $response = $this->actingAs($santriUser)->post('/email/verification-notification');
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('santri.dashboard', absolute: false));
     }
 }

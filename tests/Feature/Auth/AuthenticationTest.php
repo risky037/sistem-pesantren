@@ -43,17 +43,19 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('admin.dashboard', absolute: false));
     }
 
-    public function test_santri_login_fails_closed_and_clears_authentication(): void
+    public function test_santri_can_authenticate_and_redirect_to_santri_dashboard(): void
     {
-        $santri = User::factory()->santri()->create();
+        $santriUser = User::factory()->create();
+        $santriUser->role = 'santri';
+        $santriUser->save();
 
         $response = $this->post('/login', [
-            'email' => $santri->email,
+            'email' => $santriUser->email,
             'password' => 'password',
         ]);
 
-        $response->assertForbidden();
-        $this->assertGuest();
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('santri.dashboard', absolute: false));
     }
 
     public function test_unsupported_role_login_fails_closed_and_clears_authentication(): void

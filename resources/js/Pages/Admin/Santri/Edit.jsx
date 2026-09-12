@@ -19,7 +19,8 @@ export default function SantriEdit({ santri }) {
         kelas: santri.kelas || '',
         program: santri.program || '',
         status: santri.status || 'aktif',
-        email: santri.email || '',
+        email: santri.user ? santri.user.email : '',
+        password: '',
         telepon: santri.telepon || '',
     });
 
@@ -93,11 +94,16 @@ export default function SantriEdit({ santri }) {
                             <FormTextarea id="alamat" value={data.alamat} onChange={e => setData('alamat', e.target.value)} className="mt-1 block w-full" rows="3" />
                             <InputError message={errors.alamat} className="mt-2" />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <InputLabel htmlFor="email" value="Email (opsional)" />
+                                <InputLabel htmlFor="email" value="Email Login" />
                                 <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" />
                                 <InputError message={errors.email} className="mt-2" />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="password" value="Password (Kosongkan jika tidak diubah)" />
+                                <TextInput id="password" type="password" value={data.password} onChange={e => setData('password', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.password} className="mt-2" />
                             </div>
                             <div>
                                 <InputLabel htmlFor="telepon" value="Telepon (opsional)" />

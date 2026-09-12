@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // === Users ===
-        $admin = User::create([
+        $admin = User::forceCreate([
             'name' => 'Super Admin',
             'email' => 'admin@pesantren.com',
             'password' => Hash::make('password123'),
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        $ustadz = User::create([
+        $ustadz = User::forceCreate([
             'name' => 'Ustadz Ahmad Hidayat',
             'email' => 'ustadz@pesantren.com',
             'password' => Hash::make('password123'),
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        $ustadz2 = User::create([
+        $ustadz2 = User::forceCreate([
             'name' => 'Ustadzah Siti Nurhaliza',
             'email' => 'ustadzah@pesantren.com',
             'password' => Hash::make('password123'),
@@ -49,13 +49,31 @@ class DatabaseSeeder extends Seeder
         $arab = Subject::create(['kode_mapel' => 'ARA005', 'nama_mapel' => 'Bahasa Arab', 'deskripsi' => 'Nahwu, Sharaf, dan Percakapan']);
 
         // === Santri ===
-        $santri1 = Santri::create(['nis' => '2024001', 'nama' => 'Muhammad Rafiqi', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-05-10', 'kelas' => 'XII-A', 'program' => 'Tahfiz', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 1']);
-        $santri2 = Santri::create(['nis' => '2024002', 'nama' => 'Siti Mariam', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2008-08-15', 'kelas' => 'XII-A', 'program' => 'Tahfiz', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 2']);
-        $santri3 = Santri::create(['nis' => '2024003', 'nama' => 'Ahmad Ikhsan', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-03-22', 'kelas' => 'XII-B', 'program' => 'Reguler', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 3']);
-        $santri4 = Santri::create(['nis' => '2024004', 'nama' => 'Fatimah Zahra', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2009-01-05', 'kelas' => 'XI-A', 'program' => 'Hafalan', 'status' => 'aktif']);
-        $santri5 = Santri::create(['nis' => '2024005', 'nama' => 'Ali Hidayat', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2009-07-18', 'kelas' => 'XI-A', 'program' => 'Reguler', 'status' => 'aktif']);
-        Santri::create(['nis' => '2024006', 'nama' => 'Khadijah Amira', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2009-11-30', 'kelas' => 'XI-B', 'program' => 'Reguler', 'status' => 'aktif']);
-        Santri::create(['nis' => '2024007', 'nama' => 'Umar Faruq', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-09-12', 'kelas' => 'XII-B', 'program' => 'Tahfiz', 'status' => 'aktif']);
+        $santriData = [
+            ['nis' => '2024001', 'nama' => 'Muhammad Rafiqi', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-05-10', 'kelas' => 'XII-A', 'program' => 'Tahfiz', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 1', 'email' => 'rafiqi@pesantren.com'],
+            ['nis' => '2024002', 'nama' => 'Siti Mariam', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2008-08-15', 'kelas' => 'XII-A', 'program' => 'Tahfiz', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 2', 'email' => 'mariam@pesantren.com'],
+            ['nis' => '2024003', 'nama' => 'Ahmad Ikhsan', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-03-22', 'kelas' => 'XII-B', 'program' => 'Reguler', 'status' => 'aktif', 'alamat' => 'Jl. Pesantren No. 3', 'email' => 'ikhsan@pesantren.com'],
+            ['nis' => '2024004', 'nama' => 'Fatimah Zahra', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2009-01-05', 'kelas' => 'XI-A', 'program' => 'Hafalan', 'status' => 'aktif', 'email' => 'fatimah@pesantren.com'],
+            ['nis' => '2024005', 'nama' => 'Ali Hidayat', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2009-07-18', 'kelas' => 'XI-A', 'program' => 'Reguler', 'status' => 'aktif', 'email' => 'ali@pesantren.com'],
+            ['nis' => '2024006', 'nama' => 'Khadijah Amira', 'jenis_kelamin' => 'P', 'tanggal_lahir' => '2009-11-30', 'kelas' => 'XI-B', 'program' => 'Reguler', 'status' => 'aktif', 'email' => 'khadijah@pesantren.com'],
+            ['nis' => '2024007', 'nama' => 'Umar Faruq', 'jenis_kelamin' => 'L', 'tanggal_lahir' => '2008-09-12', 'kelas' => 'XII-B', 'program' => 'Tahfiz', 'status' => 'aktif', 'email' => 'umar@pesantren.com'],
+        ];
+
+        $santriModels = [];
+        foreach ($santriData as $data) {
+            $user = User::forceCreate([
+                'name' => $data['nama'],
+                'email' => $data['email'],
+                'password' => Hash::make('password123'),
+                'role' => UserRole::Santri->value,
+                'email_verified_at' => now(),
+            ]);
+            unset($data['email']);
+            $data['user_id'] = $user->id;
+            $santriModels[] = Santri::create($data);
+        }
+        $santri1 = $santriModels[0];
+        $santri2 = $santriModels[1];
 
         // === Jadwal ===
         Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'hari' => 'Senin', 'jam_mulai' => '08:00', 'jam_selesai' => '09:30', 'kelas' => 'XII-A', 'ruang' => 'Ruang 1']);
