@@ -26,5 +26,8 @@ class RegistrationTest extends TestCase
 
         $response->assertStatus(404);
         $this->assertGuest();
+        $this->assertDatabaseMissing('users', [
+            'email' => 'test@example.com',
+        ]);
     }
 }

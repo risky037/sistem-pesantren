@@ -25,16 +25,12 @@ export default function Welcome({ auth }) {
                                         Dashboard
                                     </Link>
                                 ) : (
-                                    <>
-                                        <Link
-                                            href={route('login')}
-                                            className="text-gray-600 hover:text-emerald-700 font-medium px-4 py-2 transition-colors"
-                                        >
-                                            Log in
-                                        </Link>
-                                        {/* Register is hidden by default in production, uncomment if needed */}
-                                        {/* <Link href={route('register')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm">Daftar</Link> */}
-                                    </>
+                                    <Link
+                                        href={route('login')}
+                                        className="text-gray-600 hover:text-emerald-700 font-medium px-4 py-2 transition-colors"
+                                    >
+                                        Log in
+                                    </Link>
                                 )}
                             </div>
                         </div>
