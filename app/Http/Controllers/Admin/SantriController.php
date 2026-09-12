@@ -6,23 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSantriRequest;
 use App\Http\Requests\UpdateSantriRequest;
 use App\Models\Santri;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SantriController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $filters = $request->only(['search', 'status', 'jenis_kelamin', 'kelas']);
 
         $santris = Santri::when($filters['search'] ?? null, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('nis', 'like', '%' . $search . '%')
-                      ->orWhere('nama', 'like', '%' . $search . '%')
-                      ->orWhere('kelas', 'like', '%' . $search . '%')
-                      ->orWhere('program', 'like', '%' . $search . '%')
-                      ->orWhere('status', 'like', '%' . $search . '%');
-                });
-            })
+            $query->where(function ($q) use ($search) {
+                $q->where('nis', 'like', '%'.$search.'%')
+                    ->orWhere('nama', 'like', '%'.$search.'%')
+                    ->orWhere('kelas', 'like', '%'.$search.'%')
+                    ->orWhere('program', 'like', '%'.$search.'%')
+                    ->orWhere('status', 'like', '%'.$search.'%');
+            });
+        })
             ->when($filters['status'] ?? null, function ($query, $status) {
                 $query->where('status', $status);
             })
@@ -78,8 +79,15 @@ class SantriController extends Controller
     public function destroy($id)
     {
         $santri = Santri::findOrFail($id);
+
+        if ($santri->penilaians()->exists()) {
+            return redirect()
+                ->route('admin.santri.index')
+                ->with('error', "Tidak dapat menghapus santri \"{$santri->nama}\" karena memiliki data penilaian. Ubah status santri menjadi alumni.");
+        }
+
         $santri->delete();
 
-        return redirect()->route('admin.santri.index')->with('success', 'Santri berhasil dihapus.');
+        return redirect()->route('admin.santri.index')->with('success', 'Data santri berhasil dihapus.');
     }
 }

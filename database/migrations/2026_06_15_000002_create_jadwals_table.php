@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
+            $table->foreignId('subject_id')->constrained()->onDelete('restrict');
             $table->string('hari');
             $table->time('jam_mulai');
             $table->time('jam_selesai');

@@ -101,9 +101,42 @@ class UstadzController extends Controller
             ->with('success', 'Password ustadz berhasil direset.');
     }
 
+    public function deactivate(int $id): RedirectResponse
+    {
+        $ustadz = User::where('role', UserRole::Ustadz->value)->findOrFail($id);
+
+        $ustadz->update(['is_active' => false]);
+
+        return redirect()
+            ->route('admin.ustadz.index')
+            ->with('success', "Akun ustadz \"{$ustadz->name}\" berhasil dinonaktifkan.");
+    }
+
+    public function reactivate(int $id): RedirectResponse
+    {
+        $ustadz = User::where('role', UserRole::Ustadz->value)->findOrFail($id);
+
+        $ustadz->update(['is_active' => true]);
+
+        return redirect()
+            ->route('admin.ustadz.index')
+            ->with('success', "Akun ustadz \"{$ustadz->name}\" berhasil diaktifkan kembali.");
+    }
+
     public function destroy($id)
     {
         $ustadz = User::where('role', UserRole::Ustadz->value)->findOrFail($id);
+
+        $hasDependents = $ustadz->jadwals()->exists()
+            || $ustadz->materis()->exists()
+            || $ustadz->penilaians()->exists();
+
+        if ($hasDependents) {
+            return redirect()
+                ->route('admin.ustadz.index')
+                ->with('error', "Tidak dapat menghapus ustadz \"{$ustadz->name}\" karena memiliki data akademik. Gunakan fitur nonaktifkan akun.");
+        }
+
         $ustadz->delete();
 
         return redirect()->route('admin.ustadz.index')->with('success', 'Ustadz berhasil dihapus.');

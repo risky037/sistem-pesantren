@@ -37,7 +37,7 @@ export default function UstadzIndex({ ustadzs, filters }) {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Rute disesuaikan dengan web.php
-                router.delete(route('ustadz.destroy', id), {
+                router.delete(route('admin.ustadz.destroy', id), {
                     preserveScroll: true,
                     // Tambahkan onSuccess di sini untuk memunculkan popup berhasil
                     onSuccess: () => {
@@ -52,6 +52,31 @@ export default function UstadzIndex({ ustadzs, filters }) {
         });
     };
 
+    const handleDeactivate = (id, name) => {
+        Swal.fire({
+            title: 'Nonaktifkan Akun?',
+            text: `Ustadz "${name}" tidak akan bisa login lagi, namun riwayat akademik akan tetap tersimpan.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#eab308',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, nonaktifkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route('admin.ustadz.deactivate', id), {}, {
+                    preserveScroll: true
+                });
+            }
+        });
+    };
+
+    const handleReactivate = (id) => {
+        router.post(route('admin.ustadz.reactivate', id), {}, {
+            preserveScroll: true
+        });
+    };
+
     return (
         <AdminLayout>
             <Head title="Kelola Ustadz" />
@@ -60,7 +85,7 @@ export default function UstadzIndex({ ustadzs, filters }) {
                 <PageHeader 
                     title={<div className="flex items-center"><Icon name="teacher" className="w-7 h-7 mr-3 text-emerald-600" /> Manajemen Ustadz</div>} 
                     actionText="Tambah Ustadz" 
-                    actionHref={route('ustadz.create')} // Rute disesuaikan
+                    actionHref={route('admin.ustadz.create')} // Rute disesuaikan
                 />
 
                 <FilterBar 
@@ -77,6 +102,7 @@ export default function UstadzIndex({ ustadzs, filters }) {
                             <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">No</th>
                             <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Nama</th>
                             <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-slate-700 uppercase tracking-wider">Email</th>
+                            <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">Status</th>
                             <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -86,12 +112,35 @@ export default function UstadzIndex({ ustadzs, filters }) {
                                 <td className="px-6 py-4 text-sm font-medium text-slate-900">{ustadzs.from + idx}</td>
                                 <td className="px-6 py-4 text-sm text-slate-900 font-medium">{u.name}</td>
                                 <td className="px-6 py-4 text-sm text-slate-600">{u.email}</td>
+                                <td className="px-6 py-4 text-center">
+                                    {u.is_active ? (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                            <span className="w-1.5 h-1.5 mr-1.5 bg-green-500 rounded-full"></span>
+                                            Aktif
+                                        </span>
+                                    ) : (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                                            <span className="w-1.5 h-1.5 mr-1.5 bg-slate-500 rounded-full"></span>
+                                            Nonaktif
+                                        </span>
+                                    )}
+                                </td>
                                 <td className="px-6 py-4">
                                     <ActionButtons>
-                                        {/* Rute disesuaikan */}
-                                        <Link href={route('ustadz.edit', u.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${u.name}`}>
+                                        <Link href={route('admin.ustadz.edit', u.id)} className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Edit ${u.name}`}>
                                             <Icon name="edit" className="w-4 h-4 mr-1.5" /> Edit
                                         </Link>
+
+                                        {u.is_active ? (
+                                            <button onClick={() => handleDeactivate(u.id, u.name)} className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Nonaktifkan ${u.name}`}>
+                                                <Icon name="xCircle" className="w-4 h-4 mr-1.5" /> Nonaktifkan
+                                            </button>
+                                        ) : (
+                                            <button onClick={() => handleReactivate(u.id)} className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Aktifkan ${u.name}`}>
+                                                <Icon name="check" className="w-4 h-4 mr-1.5" /> Aktifkan
+                                            </button>
+                                        )}
+
                                         <button onClick={() => handleDelete(u.id, u.name)} className="inline-flex items-center justify-center bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm" aria-label={`Hapus ${u.name}`}>
                                             <Icon name="trash" className="w-4 h-4 mr-1.5" /> Hapus
                                         </button>

@@ -30,6 +30,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/ustadz/{id}/edit', [UstadzController::class, 'edit'])->name('ustadz.edit');
     Route::put('/ustadz/{id}', [UstadzController::class, 'update'])->name('ustadz.update');
     Route::post('/ustadz/{id}/reset-password', [UstadzController::class, 'resetPassword'])->name('ustadz.reset-password');
+    Route::post('/ustadz/{id}/deactivate', [UstadzController::class, 'deactivate'])->name('ustadz.deactivate');
+    Route::post('/ustadz/{id}/reactivate', [UstadzController::class, 'reactivate'])->name('ustadz.reactivate');
     Route::delete('/ustadz/{id}', [UstadzController::class, 'destroy'])->name('ustadz.destroy');
 
     // Santri Management
@@ -87,7 +89,6 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
