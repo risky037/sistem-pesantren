@@ -1,19 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\UstadzController;
+use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
 use App\Http\Controllers\Admin\SantriController as AdminSantriController;
 use App\Http\Controllers\Admin\SubjectController;
-use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
-
+use App\Http\Controllers\Admin\UstadzController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Ustadz\DashboardController as UstadzDashboardController;
 use App\Http\Controllers\Ustadz\JadwalController as UstadzJadwalController;
-use App\Http\Controllers\Ustadz\SantriController as UstadzSantriController;
-use App\Http\Controllers\Ustadz\PenilaianController;
 use App\Http\Controllers\Ustadz\MateriController;
+use App\Http\Controllers\Ustadz\PenilaianController;
+use App\Http\Controllers\Ustadz\SantriController as UstadzSantriController;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -30,6 +29,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/ustadz', [UstadzController::class, 'store'])->name('ustadz.store');
     Route::get('/ustadz/{id}/edit', [UstadzController::class, 'edit'])->name('ustadz.edit');
     Route::put('/ustadz/{id}', [UstadzController::class, 'update'])->name('ustadz.update');
+    Route::post('/ustadz/{id}/reset-password', [UstadzController::class, 'resetPassword'])->name('ustadz.reset-password');
     Route::delete('/ustadz/{id}', [UstadzController::class, 'destroy'])->name('ustadz.destroy');
 
     // Santri Management
@@ -57,7 +57,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/jadwal/{id}', [AdminJadwalController::class, 'destroy'])->name('jadwal.destroy');
 });
 
-/// Grup Rute Ustadz
+// / Grup Rute Ustadz
 Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [UstadzDashboardController::class, 'index'])->name('dashboard');
@@ -85,9 +85,9 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
 
 // Profile Routes (Breeze)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
