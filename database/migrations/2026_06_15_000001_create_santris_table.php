@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('santris', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('restrict');
             $table->string('nis')->unique();
             $table->string('nama');
             $table->string('jenis_kelamin');
@@ -18,7 +19,6 @@ return new class extends Migration
             $table->string('kelas');
             $table->string('program')->nullable();
             $table->string('status')->default('aktif');
-            $table->string('email')->nullable();
             $table->string('telepon')->nullable();
             $table->timestamps();
         });

@@ -6,7 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSantriRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {
@@ -19,7 +22,8 @@ class StoreSantriRequest extends FormRequest
             'kelas' => ['required', 'string', 'max:20'],
             'program' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'string', 'in:aktif,alumni,keluar'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
             'telepon' => ['nullable', 'string', 'max:20'],
         ];
     }

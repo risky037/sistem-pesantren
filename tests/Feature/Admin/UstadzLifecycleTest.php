@@ -111,7 +111,7 @@ class UstadzLifecycleTest extends TestCase
     public function test_admin_cannot_delete_ustadz_with_penilaian_records(): void
     {
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
-        $santri = Santri::create([
+        $santri = \App\Models\Santri::factory()->create([
             'nis' => '12345',
             'nama' => 'Test Santri',
             'jenis_kelamin' => 'L',

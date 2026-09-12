@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSantriRequest;
 use App\Http\Requests\UpdateSantriRequest;
 use App\Models\Santri;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class SantriController extends Controller
@@ -33,6 +37,7 @@ class SantriController extends Controller
             ->when($filters['kelas'] ?? null, function ($query, $kelas) {
                 $query->where('kelas', $kelas);
             })
+            ->with('user')
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -54,14 +59,36 @@ class SantriController extends Controller
 
     public function store(StoreSantriRequest $request)
     {
-        Santri::create($request->validated());
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated) {
+            $user = User::forceCreate([
+                'name' => $validated['nama'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => UserRole::Santri->value,
+            ]);
+
+            Santri::create([
+                'user_id' => $user->id,
+                'nis' => $validated['nis'],
+                'nama' => $validated['nama'],
+                'jenis_kelamin' => $validated['jenis_kelamin'],
+                'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                'alamat' => $validated['alamat'] ?? null,
+                'kelas' => $validated['kelas'],
+                'program' => $validated['program'] ?? null,
+                'status' => $validated['status'] ?? 'aktif',
+                'telepon' => $validated['telepon'] ?? null,
+            ]);
+        });
 
         return redirect()->route('admin.santri.index')->with('success', 'Santri berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $santri = Santri::findOrFail($id);
+        $santri = Santri::with('user')->findOrFail($id);
 
         return Inertia::render('Admin/Santri/Edit', [
             'santri' => $santri,
@@ -71,7 +98,33 @@ class SantriController extends Controller
     public function update(UpdateSantriRequest $request, $id)
     {
         $santri = Santri::findOrFail($id);
-        $santri->update($request->validated());
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($santri, $validated) {
+            $santri->update([
+                'nis' => $validated['nis'],
+                'nama' => $validated['nama'],
+                'jenis_kelamin' => $validated['jenis_kelamin'],
+                'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                'alamat' => $validated['alamat'] ?? null,
+                'kelas' => $validated['kelas'],
+                'program' => $validated['program'] ?? null,
+                'status' => $validated['status'],
+                'telepon' => $validated['telepon'] ?? null,
+            ]);
+
+            $userData = ['name' => $validated['nama']];
+            if (isset($validated['email'])) {
+                $userData['email'] = $validated['email'];
+            }
+            if (! empty($validated['password'])) {
+                $userData['password'] = Hash::make($validated['password']);
+            }
+
+            if ($santri->user) {
+                $santri->user->update($userData);
+            }
+        });
 
         return redirect()->route('admin.santri.index')->with('success', 'Data santri berhasil diperbarui.');
     }
@@ -86,7 +139,13 @@ class SantriController extends Controller
                 ->with('error', "Tidak dapat menghapus santri \"{$santri->nama}\" karena memiliki data penilaian. Ubah status santri menjadi alumni.");
         }
 
-        $santri->delete();
+        DB::transaction(function () use ($santri) {
+            $user = $santri->user;
+            $santri->delete();
+            if ($user) {
+                $user->delete();
+            }
+        });
 
         return redirect()->route('admin.santri.index')->with('success', 'Data santri berhasil dihapus.');
     }

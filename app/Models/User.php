@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Penilaian::class);
     }
+
+    public function santri()
+    {
+        return $this->hasOne(Santri::class);
+    }
 }

@@ -20,6 +20,7 @@ export default function SantriCreate() {
         program: '',
         status: 'aktif',
         email: '',
+        password: '',
         telepon: '',
     });
 
@@ -93,11 +94,16 @@ export default function SantriCreate() {
                             <FormTextarea id="alamat" value={data.alamat} onChange={e => setData('alamat', e.target.value)} className="mt-1 block w-full" rows="3" placeholder="Alamat lengkap" />
                             <InputError message={errors.alamat} className="mt-2" />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <InputLabel htmlFor="email" value="Email (opsional)" />
-                                <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" placeholder="Email santri" />
+                                <InputLabel htmlFor="email" value="Email Login" />
+                                <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" placeholder="Email untuk login" />
                                 <InputError message={errors.email} className="mt-2" />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="password" value="Password Baru" />
+                                <TextInput id="password" type="password" value={data.password} onChange={e => setData('password', e.target.value)} className="mt-1 block w-full" placeholder="Minimal 8 karakter" />
+                                <InputError message={errors.password} className="mt-2" />
                             </div>
                             <div>
                                 <InputLabel htmlFor="telepon" value="Telepon (opsional)" />

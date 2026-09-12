@@ -2,12 +2,16 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Santri;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateSantriRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {
@@ -20,8 +24,16 @@ class UpdateSantriRequest extends FormRequest
             'kelas' => ['required', 'string', 'max:20'],
             'program' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'string', 'in:aktif,alumni,keluar'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->getUserId())],
+            'password' => ['nullable', 'string', 'min:8'],
             'telepon' => ['nullable', 'string', 'max:20'],
         ];
+    }
+
+    protected function getUserId()
+    {
+        $santri = Santri::find($this->route('id'));
+
+        return $santri ? $santri->user_id : null;
     }
 }
