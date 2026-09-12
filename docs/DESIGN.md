@@ -35,6 +35,13 @@ The project observes a distinct two-phase database migration strategy:
 *   **Santri Authentication Contract:** Santri must eventually possess an authenticated login identity to access the student portal. The current Santri domain record is not connected to an authentication identity, while the intended product requires Santri login. The relationship between authentication identity and academic Santri data therefore requires explicit design.
 *   **Pragmatic Modeling:** Do **not** prematurely introduce separate profile tables (such as `santri_profiles` or `ustadz_profiles`) unless detailed domain modeling proves they are strictly required. Existing models (`User`, `Santri`) should be preserved, reused, or evolved pragmatically.
 
+### 3.2 Role Foundation & Redirect Architecture (P0-1B.1)
+*   **Typed Role Source of Truth:** `App\Enums\UserRole` (PHP backed string enum: `Admin = 'admin'`, `Ustadz = 'ustadz'`, `Santri = 'santri'`) provides a single source of truth for role definitions.
+*   **Native Enum Casting Deferred:** Storage in `users.role` remains `string`. Native enum casting (`User::$casts`) is deferred to avoid unhandled `ValueError` 500 crashes on unconstrained legacy or malformed database rows. Conversion is performed via `User::roleEnum()` using `UserRole::tryFrom(...)`.
+*   **Consolidated Dashboard Destination:** `UserRole::dashboardRouteName(): ?string` maps `Admin` to `'admin.dashboard'`, `Ustadz` to `'ustadz.dashboard'`, and `Santri` to `null` (portal deferred).
+*   **Fail-Closed Security Invariant:** Any login attempt with an unsupported role or a Santri account (with no active portal) is terminated fail-closed: the user session is logged out, the session is invalidated, CSRF token regenerated, and an HTTP 403 response is returned.
+*   **Role Middleware Defense:** `RoleMiddleware` strictly validates both the authenticated user's role and the route's target role via `UserRole::tryFrom(...)`, failing closed on mismatches or unknown roles with zero bypass.
+
 ---
 
 ## 4. Academic Domain Architecture

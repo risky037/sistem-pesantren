@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Subject;
-use App\Models\Santri;
+use App\Enums\UserRole;
 use App\Models\Jadwal;
-use App\Models\Penilaian;
 use App\Models\Materi;
+use App\Models\Penilaian;
+use App\Models\Santri;
+use App\Models\Subject;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'admin@pesantren.com',
             'password' => Hash::make('password123'),
-            'role' => 'admin',
+            'role' => UserRole::Admin->value,
             'email_verified_at' => now(),
         ]);
 
@@ -28,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ustadz Ahmad Hidayat',
             'email' => 'ustadz@pesantren.com',
             'password' => Hash::make('password123'),
-            'role' => 'ustadz',
+            'role' => UserRole::Ustadz->value,
             'email_verified_at' => now(),
         ]);
 
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ustadzah Siti Nurhaliza',
             'email' => 'ustadzah@pesantren.com',
             'password' => Hash::make('password123'),
-            'role' => 'ustadz',
+            'role' => UserRole::Ustadz->value,
             'email_verified_at' => now(),
         ]);
 

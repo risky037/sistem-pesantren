@@ -33,17 +33,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = $request->user();
+        $destination = $request->user()->roleEnum()?->dashboardRouteName();
 
-        // Pengecekan role
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->role === 'ustadz') {
-            return redirect()->route('ustadz.dashboard');
+        if ($destination === null) {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+
+            abort(403, 'Akses dashboard belum tersedia untuk akun ini.');
         }
 
-        // Fallback redirect ke home jika role tidak cocok
-        return redirect('/');
+        return redirect()->intended(route($destination, absolute: false));
     }
 
     /**

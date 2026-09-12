@@ -14,7 +14,13 @@ class EmailVerificationNotificationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+            $destination = $request->user()->roleEnum()?->dashboardRouteName();
+
+            if ($destination === null) {
+                abort(403, 'Akses dashboard belum tersedia untuk akun ini.');
+            }
+
+            return redirect()->intended(route($destination, absolute: false));
         }
 
         $request->user()->sendEmailVerificationNotification();

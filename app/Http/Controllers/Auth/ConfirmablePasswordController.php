@@ -36,9 +36,12 @@ class ConfirmablePasswordController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        $user = $request->user();
-        $dashboardRoute = $user->role === 'admin' ? 'admin.dashboard' : 'ustadz.dashboard';
+        $destination = $request->user()->roleEnum()?->dashboardRouteName();
 
-        return redirect()->intended(route($dashboardRoute, absolute: false));
+        if ($destination === null) {
+            abort(403, 'Akses dashboard belum tersedia untuk akun ini.');
+        }
+
+        return redirect()->intended(route($destination, absolute: false));
     }
 }

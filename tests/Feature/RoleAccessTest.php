@@ -28,9 +28,7 @@ class RoleAccessTest extends TestCase
 
     public function test_ustadz_cannot_access_admin_dashboard(): void
     {
-        $user = User::factory()->create([
-            'role' => 'ustadz',
-        ]);
+        $user = User::factory()->ustadz()->create();
 
         $response = $this
             ->actingAs($user)
@@ -41,15 +39,28 @@ class RoleAccessTest extends TestCase
 
     public function test_admin_cannot_access_ustadz_dashboard(): void
     {
-        $user = User::factory()->create([
-            'role' => 'admin',
-        ]);
+        $user = User::factory()->admin()->create();
 
         $response = $this
             ->actingAs($user)
             ->get(route('ustadz.dashboard'));
 
         $response->assertForbidden();
+    }
+
+    public function test_santri_role_cannot_access_privileged_dashboards(): void
+    {
+        $user = User::factory()->santri()->create();
+
+        $this
+            ->actingAs($user)
+            ->get(route('admin.dashboard'))
+            ->assertForbidden();
+
+        $this
+            ->actingAs($user)
+            ->get(route('ustadz.dashboard'))
+            ->assertForbidden();
     }
 
     public function test_unknown_role_cannot_access_privileged_dashboards(): void

@@ -31,6 +31,18 @@ class PasswordConfirmationTest extends TestCase
         $response->assertSessionHasNoErrors();
     }
 
+    public function test_admin_password_can_be_confirmed(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->post('/confirm-password', [
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard', absolute: false));
+        $response->assertSessionHasNoErrors();
+    }
+
     public function test_password_is_not_confirmed_with_invalid_password(): void
     {
         $user = User::factory()->create();
