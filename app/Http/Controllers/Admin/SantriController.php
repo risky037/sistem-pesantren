@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ResetUserPasswordRequest;
 use App\Http\Requests\StoreSantriRequest;
 use App\Http\Requests\UpdateSantriRequest;
 use App\Models\Santri;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -117,9 +119,6 @@ class SantriController extends Controller
             if (isset($validated['email'])) {
                 $userData['email'] = $validated['email'];
             }
-            if (! empty($validated['password'])) {
-                $userData['password'] = Hash::make($validated['password']);
-            }
 
             if ($santri->user) {
                 $santri->user->update($userData);
@@ -127,6 +126,21 @@ class SantriController extends Controller
         });
 
         return redirect()->route('admin.santri.index')->with('success', 'Data santri berhasil diperbarui.');
+    }
+
+    public function resetPassword(ResetUserPasswordRequest $request, int $id): RedirectResponse
+    {
+        $santri = Santri::with('user')->findOrFail($id);
+
+        if ($santri->user) {
+            $santri->user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.santri.index')
+            ->with('success', 'Password santri berhasil direset.');
     }
 
     public function destroy($id)

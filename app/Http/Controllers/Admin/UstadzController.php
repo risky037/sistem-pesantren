@@ -71,10 +71,6 @@ class UstadzController extends Controller
             'email' => $request->email,
         ];
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
         $ustadz->update($data);
 
         return redirect()->route('admin.ustadz.index')->with('success', 'Data ustadz berhasil diperbarui.');

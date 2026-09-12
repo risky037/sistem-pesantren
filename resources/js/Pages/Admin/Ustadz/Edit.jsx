@@ -13,7 +13,6 @@ export default function UstadzEdit({ ustadz }) {
     const { data, setData, put, processing, errors } = useForm({
         name: ustadz.name || '',
         email: ustadz.email || '',
-        password: '',
     });
 
     const {
@@ -101,20 +100,7 @@ export default function UstadzEdit({ ustadz }) {
                             />
                             <InputError message={errors.email} className="mt-2" />
                         </div>
-                        <div>
-                            <InputLabel htmlFor="password">
-                                Password <span className="text-gray-400 font-normal ml-1">(kosongkan jika tidak diubah)</span>
-                            </InputLabel>
-                            <TextInput
-                                id="password"
-                                type="password"
-                                value={data.password}
-                                onChange={e => setData('password', e.target.value)}
-                                className="mt-1 block w-full"
-                                placeholder="Minimal 8 karakter"
-                            />
-                            <InputError message={errors.password} className="mt-2" />
-                        </div>
+
                         <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
                             <PrimaryButton type="submit" className="justify-center py-2.5 sm:w-auto w-full" disabled={processing}>
                                 {processing ? (

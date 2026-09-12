@@ -7,7 +7,9 @@ import FormSelect from '@/Components/FormSelect';
 import FormTextarea from '@/Components/FormTextarea';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
+import DangerButton from '@/Components/DangerButton';
 import Icon from '@/Components/Icon';
+import Swal from 'sweetalert2';
 
 export default function SantriEdit({ santri }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -20,13 +22,53 @@ export default function SantriEdit({ santri }) {
         program: santri.program || '',
         status: santri.status || 'aktif',
         email: santri.user ? santri.user.email : '',
-        password: '',
         telepon: santri.telepon || '',
+    });
+
+    const {
+        data: resetData,
+        setData: setResetData,
+        post: postReset,
+        processing: resetProcessing,
+        errors: resetErrors,
+        reset: clearResetForm,
+    } = useForm({
+        password: '',
+        password_confirmation: '',
     });
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('admin.santri.update', santri.id));
+        put(route('admin.santri.update', santri.id), { preserveScroll: true });
+    };
+
+    const handleResetPassword = (e) => {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Reset Password Santri?',
+            text: `Password akun "${santri.nama}" akan direset. Pastikan Anda telah menyiapkan password baru untuk disampaikan secara langsung.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, reset password!',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                postReset(route('admin.santri.reset-password', santri.id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        clearResetForm();
+                        Swal.fire(
+                            'Berhasil!',
+                            `Password santri "${santri.nama}" telah direset.`,
+                            'success'
+                        );
+                    },
+                });
+            }
+        });
     };
 
     return (
@@ -94,16 +136,11 @@ export default function SantriEdit({ santri }) {
                             <FormTextarea id="alamat" value={data.alamat} onChange={e => setData('alamat', e.target.value)} className="mt-1 block w-full" rows="3" />
                             <InputError message={errors.alamat} className="mt-2" />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <InputLabel htmlFor="email" value="Email Login" />
                                 <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" />
                                 <InputError message={errors.email} className="mt-2" />
-                            </div>
-                            <div>
-                                <InputLabel htmlFor="password" value="Password (Kosongkan jika tidak diubah)" />
-                                <TextInput id="password" type="password" value={data.password} onChange={e => setData('password', e.target.value)} className="mt-1 block w-full" />
-                                <InputError message={errors.password} className="mt-2" />
                             </div>
                             <div>
                                 <InputLabel htmlFor="telepon" value="Telepon (opsional)" />
@@ -125,6 +162,50 @@ export default function SantriEdit({ santri }) {
                                     Batal
                                 </SecondaryButton>
                             </Link>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Admin Password Reset Section */}
+                <div className="bg-white rounded-xl shadow-sm border border-red-100 p-6 sm:p-8 max-w-5xl">
+                    <div className="mb-5">
+                        <h2 className="text-lg font-semibold text-gray-900">Reset Password</h2>
+                        <p className="mt-1 text-sm text-gray-500">
+                            Reset password akun santri ini. Password baru harus disampaikan langsung kepada santri yang bersangkutan.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleResetPassword} className="space-y-4 max-w-2xl">
+                        <div>
+                            <InputLabel htmlFor="reset_password" value="Password Baru" />
+                            <TextInput
+                                id="reset_password"
+                                type="password"
+                                value={resetData.password}
+                                onChange={e => setResetData('password', e.target.value)}
+                                className="mt-1 block w-full"
+                                placeholder="Minimal 8 karakter"
+                                autoComplete="new-password"
+                            />
+                            <InputError message={resetErrors.password} className="mt-2" />
+                        </div>
+                        <div>
+                            <InputLabel htmlFor="reset_password_confirmation" value="Konfirmasi Password Baru" />
+                            <TextInput
+                                id="reset_password_confirmation"
+                                type="password"
+                                value={resetData.password_confirmation}
+                                onChange={e => setResetData('password_confirmation', e.target.value)}
+                                className="mt-1 block w-full"
+                                placeholder="Ulangi password baru"
+                                autoComplete="new-password"
+                            />
+                            <InputError message={resetErrors.password_confirmation} className="mt-2" />
+                        </div>
+                        <div className="pt-2">
+                            <DangerButton type="submit" disabled={resetProcessing} className="justify-center">
+                                {resetProcessing ? 'Mereset...' : 'Reset Password Santri'}
+                            </DangerButton>
                         </div>
                     </form>
                 </div>

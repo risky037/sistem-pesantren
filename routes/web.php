@@ -40,6 +40,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/santri', [AdminSantriController::class, 'store'])->name('santri.store');
     Route::get('/santri/{id}/edit', [AdminSantriController::class, 'edit'])->name('santri.edit');
     Route::put('/santri/{id}', [AdminSantriController::class, 'update'])->name('santri.update');
+    Route::post('/santri/{id}/reset-password', [AdminSantriController::class, 'resetPassword'])->name('santri.reset-password');
     Route::delete('/santri/{id}', [AdminSantriController::class, 'destroy'])->name('santri.destroy');
 
     // Mata Pelajaran Management

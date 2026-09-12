@@ -71,7 +71,6 @@ class SantriLifecycleTest extends TestCase
             'kelas' => $santri->kelas,
             'status' => $santri->status,
             'email' => 'updated@example.com',
-            'password' => 'newpassword123',
         ];
 
         $response = $this->actingAs($this->admin)->put(route('admin.santri.update', $santri->id), $payload);
@@ -90,9 +89,37 @@ class SantriLifecycleTest extends TestCase
             'name' => 'Updated Name',
             'email' => 'updated@example.com',
         ]);
+    }
+
+    public function test_admin_can_reset_santri_password(): void
+    {
+        $santri = Santri::factory()->create();
+
+        $payload = [
+            'password' => 'SecurePa$$w0rd2026!',
+            'password_confirmation' => 'SecurePa$$w0rd2026!',
+        ];
+
+        $response = $this->actingAs($this->admin)->post(route('admin.santri.reset-password', $santri->id), $payload);
+
+        $response->assertRedirect(route('admin.santri.index'));
 
         $user = $santri->user->fresh();
-        $this->assertTrue(Hash::check('newpassword123', $user->password));
+        $this->assertTrue(Hash::check('SecurePa$$w0rd2026!', $user->password));
+    }
+
+    public function test_non_admin_cannot_reset_santri_password(): void
+    {
+        $santri = Santri::factory()->create();
+        $ustadz = User::factory()->create(['role' => UserRole::Ustadz->value]);
+
+        $payload = [
+            'password' => 'SecurePa$$w0rd2026!',
+            'password_confirmation' => 'SecurePa$$w0rd2026!',
+        ];
+
+        $this->actingAs($ustadz)->post(route('admin.santri.reset-password', $santri->id), $payload)
+            ->assertStatus(403);
     }
 
     public function test_admin_can_delete_santri_and_linked_user_is_removed(): void
