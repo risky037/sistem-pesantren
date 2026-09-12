@@ -2,32 +2,34 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreJadwalRequest;
 use App\Http\Requests\UpdateJadwalRequest;
 use App\Models\Jadwal;
 use App\Models\Subject;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class JadwalController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $filters = $request->only(['search', 'hari', 'subject_id', 'user_id']);
 
         $jadwals = Jadwal::with(['ustadz', 'subject'])
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('hari', 'like', '%' . $search . '%')
-                      ->orWhere('kelas', 'like', '%' . $search . '%')
-                      ->orWhere('ruang', 'like', '%' . $search . '%')
-                      ->orWhereHas('ustadz', function ($q2) use ($search) {
-                          $q2->where('name', 'like', '%' . $search . '%');
-                      })
-                      ->orWhereHas('subject', function ($q3) use ($search) {
-                          $q3->where('nama_mapel', 'like', '%' . $search . '%');
-                      });
+                    $q->where('hari', 'like', '%'.$search.'%')
+                        ->orWhere('kelas', 'like', '%'.$search.'%')
+                        ->orWhere('ruang', 'like', '%'.$search.'%')
+                        ->orWhereHas('ustadz', function ($q2) use ($search) {
+                            $q2->where('name', 'like', '%'.$search.'%');
+                        })
+                        ->orWhereHas('subject', function ($q3) use ($search) {
+                            $q3->where('nama_mapel', 'like', '%'.$search.'%');
+                        });
                 });
             })
             ->when($filters['hari'] ?? null, function ($query, $hari) {
@@ -47,14 +49,14 @@ class JadwalController extends Controller
             'jadwals' => $jadwals,
             'filters' => $filters,
             'subjects' => Subject::select('id', 'nama_mapel')->orderBy('nama_mapel')->get(),
-            'ustadzs' => User::where('role', 'ustadz')->select('id', 'name')->orderBy('name')->get(),
+            'ustadzs' => User::where('role', UserRole::Ustadz->value)->select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
     public function create()
     {
         return Inertia::render('Admin/Jadwal/Create', [
-            'ustadzs' => User::where('role', 'ustadz')->select('id', 'name')->get(),
+            'ustadzs' => User::where('role', UserRole::Ustadz->value)->select('id', 'name')->get(),
             'subjects' => Subject::select('id', 'nama_mapel')->get(),
         ]);
     }
@@ -72,7 +74,7 @@ class JadwalController extends Controller
 
         return Inertia::render('Admin/Jadwal/Edit', [
             'jadwal' => $jadwal,
-            'ustadzs' => User::where('role', 'ustadz')->select('id', 'name')->get(),
+            'ustadzs' => User::where('role', UserRole::Ustadz->value)->select('id', 'name')->get(),
             'subjects' => Subject::select('id', 'nama_mapel')->get(),
         ]);
     }

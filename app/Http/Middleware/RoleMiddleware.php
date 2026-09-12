@@ -1,12 +1,12 @@
 <?php
 
-
 namespace App\Http\Middleware;
 
+use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
@@ -15,8 +15,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        // Jika user belum login atau role-nya tidak cocok dengan rute, tolak aksesnya!
-        if (!Auth::check() || Auth::user()->role !== $role) {
+        if (! Auth::check()) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
+        $userRole = Auth::user()->roleEnum();
+        $targetRole = UserRole::tryFrom($role);
+
+        if ($userRole === null || $targetRole === null || $userRole !== $targetRole) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 

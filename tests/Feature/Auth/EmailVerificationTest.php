@@ -41,6 +41,25 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('ustadz.dashboard', absolute: false).'?verified=1');
     }
 
+    public function test_admin_email_can_be_verified(): void
+    {
+        $admin = User::factory()->admin()->unverified()->create();
+
+        Event::fake();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $admin->id, 'hash' => sha1($admin->email)]
+        );
+
+        $response = $this->actingAs($admin)->get($verificationUrl);
+
+        Event::assertDispatched(Verified::class);
+        $this->assertTrue($admin->fresh()->hasVerifiedEmail());
+        $response->assertRedirect(route('admin.dashboard', absolute: false).'?verified=1');
+    }
+
     public function test_email_is_not_verified_with_invalid_hash(): void
     {
         $user = User::factory()->unverified()->create();
@@ -54,5 +73,32 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user)->get($verificationUrl);
 
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_verified_ustadz_sending_verification_notification_redirects_to_ustadz_dashboard(): void
+    {
+        $user = User::factory()->ustadz()->create();
+
+        $response = $this->actingAs($user)->post('/email/verification-notification');
+
+        $response->assertRedirect(route('ustadz.dashboard', absolute: false));
+    }
+
+    public function test_verified_admin_sending_verification_notification_redirects_to_admin_dashboard(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->post('/email/verification-notification');
+
+        $response->assertRedirect(route('admin.dashboard', absolute: false));
+    }
+
+    public function test_verified_santri_sending_verification_notification_fails_closed(): void
+    {
+        $santri = User::factory()->santri()->create();
+
+        $response = $this->actingAs($santri)->post('/email/verification-notification');
+
+        $response->assertForbidden();
     }
 }

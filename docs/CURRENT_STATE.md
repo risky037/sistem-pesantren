@@ -40,8 +40,8 @@ The application defines 28 total registered web routes:
 | Module | Feature Area | Current Implementation Reality |
 | :--- | :--- | :--- |
 | **Authentication** | Registration & Onboarding | **Resolved (P0-1A):** Public registration is disabled. The database default role has been removed to prevent privilege escalation. |
-| **Authentication** | Login & Password Flows | Functional. Starter-kit test suite updated to align with role-based routing contract. |
-| **Admin** | Staff Management (Ustadz) | Implemented via `UserController` (`role = 'ustadz'`). Functional database CRUD. |
+| **Authentication** | Login & Password Flows | **Resolved (P0-1B.1):** Typed `UserRole` enum introduced as application source of truth. Dashboard redirects consolidated across all auth controllers with fail-closed logout for unsupported roles. |
+| **Admin** | Staff Management (Ustadz) | Implemented via `UserController` (`UserRole::Ustadz`). Functional database CRUD. |
 | **Admin** | Santri Management | Implemented via `SantriController`. Direct CRUD on `santris` table. |
 | **Admin** | Subject Management (*Mapel*) | Implemented via `SubjectController`. Direct CRUD on `subjects` table. |
 | **Admin** | Schedule Management (*Jadwal*) | Implemented via `JadwalController`. Connects `user_id`, `subject_id`, and string `kelas`. |
@@ -100,10 +100,9 @@ Repository evidence indicates that several core academic concepts are currently 
 
 ## 7. Test Baseline & Route Contract Analysis
 
-*   **Test Suite Status:** 25 tests currently pass (100%).
-*   **Resolved Route Contract Mismatch (P0-1A):**
-    *   Previously, failing tests (`PasswordConfirmationTest`, `RegistrationTest`, `EmailVerificationTest`) originated from the default Laravel Breeze starter-kit suite expecting a standard named route `route('dashboard')` after authentication actions.
-    *   The test suite and application redirect controllers have been unified. Tests now properly assert against the intended role-based routing architecture (`route('ustadz.dashboard')` and `route('admin.dashboard')`).
+*   **Test Suite Status:** 38 tests currently pass (100%).
+*   **Resolved Route Contract Mismatch (P0-1A & P0-1B.1):**
+    *   Authentication action redirects are consolidated using `UserRole` and `User::roleEnum()`. Tests explicitly assert role-specific routing (`ustadz.dashboard`, `admin.dashboard`), while testing fail-closed 403 rejection and session clearance for unsupported roles and not-yet-implemented Santri portal.
 
 ---
 

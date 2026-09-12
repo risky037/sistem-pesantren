@@ -16,6 +16,8 @@ P0-7 (Quality Baseline) <── P0-6 (UI Consistency) <── P0-5 (CRUD Audit) 
 
 ### P0-1: Security and Account Provisioning
 *   **[COMPLETED] P0-1A: Mitigate Public Registration Risk:** The vulnerability where `users.role` defaults to `ustadz` has been removed, and public `/register` endpoints have been disabled.
+*   **[COMPLETED] P0-1B.1: Typed Role Foundation & Consolidated Redirects:** Established `UserRole` backed enum, `User::roleEnum()`, centralized dashboard redirect routing (`admin.dashboard`, `ustadz.dashboard`), fail-closed authentication clearance for unsupported/Santri logins, and dual enum validation in `RoleMiddleware`.
+*   **[DEFERRED] P0-1B.2+ Account Identity & Lifecycle:** Santri authentication linkage (`santris.user_id`), atomic Santri provisioning, account deactivation (`is_active`), Admin-managed password resets, and deprecation of self-service password reset routes.
 *   **Administrative Provisioning:** Implement Admin-controlled provisioning workflows for institutional staff (Ustadz) and administrative accounts.
 *   **Authentication Route Preservation:** Ensure core authentication workflows (Login, Password Reset, Email Verification, Session Management) remain intact and secure.
 
