@@ -15,13 +15,13 @@ P0-7 (Quality Baseline) <── P0-6 (UI Consistency) <── P0-5 (CRUD Audit) 
 ```
 
 ### P0-1: Security and Account Provisioning
-*   **Mitigate Public Registration Risk:** Resolve the vulnerability where `users.role` defaults to `ustadz` and unauthenticated visitors can register privileged accounts.
+*   **[COMPLETED] P0-1A: Mitigate Public Registration Risk:** The vulnerability where `users.role` defaults to `ustadz` has been removed, and public `/register` endpoints have been disabled.
 *   **Administrative Provisioning:** Implement Admin-controlled provisioning workflows for institutional staff (Ustadz) and administrative accounts.
 *   **Authentication Route Preservation:** Ensure core authentication workflows (Login, Password Reset, Email Verification, Session Management) remain intact and secure.
 
 ### P0-2: Test Baseline Recovery
-*   **Route Contract Resolution:** Resolve the mismatch where default starter-kit tests expect a generic `route('dashboard')` while the application uses role-specific dashboards (`admin.dashboard`, `ustadz.dashboard`).
-*   **Test Suite Green Baseline:** Update route/redirection contracts or test assertions to achieve a 100% passing rate on the PHPUnit test suite.
+*   **[COMPLETED] Route Contract Resolution:** Resolved the mismatch where default starter-kit tests expected a generic `route('dashboard')` by aligning assertions with role-specific routing (`ustadz.dashboard`, `admin.dashboard`).
+*   **[COMPLETED] Test Suite Green Baseline:** The PHPUnit test suite now achieves a 100% passing rate.
 
 ### P0-3: Authorization Audit
 *   **Policy Enforcement:** Create and register Laravel Policies for all core models (`Subject`, `Jadwal`, `Penilaian`, `Materi`).

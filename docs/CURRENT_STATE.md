@@ -39,8 +39,8 @@ The application defines 28 total registered web routes:
 
 | Module | Feature Area | Current Implementation Reality |
 | :--- | :--- | :--- |
-| **Authentication** | Registration & Onboarding | **Security Defect:** Public registration creates `User` records with a database default role of `ustadz`. Privilege escalation risk. |
-| **Authentication** | Login & Password Flows | Functional, but test suite fails on post-login redirect expectations. |
+| **Authentication** | Registration & Onboarding | **Resolved (P0-1A):** Public registration is disabled. The database default role has been removed to prevent privilege escalation. |
+| **Authentication** | Login & Password Flows | Functional. Starter-kit test suite updated to align with role-based routing contract. |
 | **Admin** | Staff Management (Ustadz) | Implemented via `UserController` (`role = 'ustadz'`). Functional database CRUD. |
 | **Admin** | Santri Management | Implemented via `SantriController`. Direct CRUD on `santris` table. |
 | **Admin** | Subject Management (*Mapel*) | Implemented via `SubjectController`. Direct CRUD on `subjects` table. |
@@ -55,11 +55,12 @@ The application defines 28 total registered web routes:
 
 ## 4. Security Risks
 
-> [!CAUTION]
-> **Critical Severity: Unrestricted Public Registration to Privileged Role**
-> 1. In `database/migrations/0001_01_01_000000_create_users_table.php`, the `role` column defaults to `'ustadz'`.
-> 2. `RegisteredUserController` permits unauthenticated public visitors to register new accounts without explicitly specifying or restricting roles.
-> 3. Consequently, any public user can register an account and immediately gain elevated access to the Ustadz dashboard, student academic rosters, curriculum materials, and grading inputs.
+> [!NOTE]
+> **Resolved (P0-1A): Unrestricted Public Registration to Privileged Role**
+> The critical vulnerability where public registration created privileged Ustadz accounts has been eliminated.
+> 1. Public `/register` endpoints have been removed.
+> 2. The unsafe `ustadz` database default has been removed from the users migration, forcing explicit role provisioning.
+> 3. Account creation is now correctly restricted to institutional provisioning.
 >
 > **Recommended Recovery Direction:**
 > *   Disable public self-registration during the recovery phase.
@@ -99,11 +100,10 @@ Repository evidence indicates that several core academic concepts are currently 
 
 ## 7. Test Baseline & Route Contract Analysis
 
-*   **Test Suite Status:** 4 tests currently fail; 21 tests pass.
-*   **Root Cause Analysis:**
-    *   The failing tests (`PasswordConfirmationTest`, `RegistrationTest`, `EmailVerificationTest`) originate from the default Laravel Breeze starter-kit suite, which expects a standard named route `route('dashboard')` after authentication actions.
-    *   The application intentionally replaced the generic `/dashboard` with role-specific dashboards: `route('admin.dashboard')` and `route('ustadz.dashboard')`.
-    *   *Classification:* This is a **contract mismatch** between starter-kit test expectations and the application's role-based routing architecture. Role-specific routing is not inherently defective; rather, it requires an explicit product decision regarding post-login redirection (e.g., implementing a central `/dashboard` role-dispatcher or updating the test suite contracts).
+*   **Test Suite Status:** 25 tests currently pass (100%).
+*   **Resolved Route Contract Mismatch (P0-1A):**
+    *   Previously, failing tests (`PasswordConfirmationTest`, `RegistrationTest`, `EmailVerificationTest`) originated from the default Laravel Breeze starter-kit suite expecting a standard named route `route('dashboard')` after authentication actions.
+    *   The test suite and application redirect controllers have been unified. Tests now properly assert against the intended role-based routing architecture (`route('ustadz.dashboard')` and `route('admin.dashboard')`).
 
 ---
 
