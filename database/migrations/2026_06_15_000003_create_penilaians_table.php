@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('penilaians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('santri_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
+            $table->foreignId('santri_id')->constrained()->onDelete('restrict');
+            $table->foreignId('subject_id')->constrained()->onDelete('restrict');
             $table->decimal('tugas', 5, 2)->nullable();
             $table->decimal('uts', 5, 2)->nullable();
             $table->decimal('uas', 5, 2)->nullable();
