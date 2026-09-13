@@ -60,6 +60,30 @@ class SantriLifecycleTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_provision_santri_with_nullable_email_wali(): void
+    {
+        $payload = [
+            'nis' => '123456',
+            'nama' => 'Test Santri Nullable Email Wali',
+            'jenis_kelamin' => 'P',
+            'kelas' => 'XI-B',
+            'status' => 'aktif',
+            'email' => 'santri2@example.com',
+            'password' => 'password123',
+            'email_wali' => null, // Explicitly null
+        ];
+
+        $response = $this->actingAs($this->admin)->post(route('admin.santri.store'), $payload);
+
+        $response->assertRedirect(route('admin.santri.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('santris', [
+            'nis' => '123456',
+            'email_wali' => null,
+        ]);
+    }
+
     public function test_admin_can_update_santri_and_user_credentials(): void
     {
         $santri = Santri::factory()->create();

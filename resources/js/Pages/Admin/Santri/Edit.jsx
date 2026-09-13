@@ -22,6 +22,7 @@ export default function SantriEdit({ santri }) {
         program: santri.program || '',
         status: santri.status || 'aktif',
         email: santri.user ? santri.user.email : '',
+        email_wali: santri.email_wali || '',
         telepon: santri.telepon || '',
     });
 
@@ -141,6 +142,13 @@ export default function SantriEdit({ santri }) {
                                 <InputLabel htmlFor="email" value="Email Login" />
                                 <TextInput id="email" type="email" value={data.email} onChange={e => setData('email', e.target.value)} className="mt-1 block w-full" />
                                 <InputError message={errors.email} className="mt-2" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <InputLabel htmlFor="email_wali" value="Email Wali (opsional)" />
+                                <TextInput id="email_wali" type="email" value={data.email_wali} onChange={e => setData('email_wali', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.email_wali} className="mt-2" />
                             </div>
                             <div>
                                 <InputLabel htmlFor="telepon" value="Telepon (opsional)" />

@@ -6,21 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $filters = $request->only(['search']);
 
         $subjects = Subject::when($filters['search'] ?? null, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('kode_mapel', 'like', '%' . $search . '%')
-                      ->orWhere('nama_mapel', 'like', '%' . $search . '%')
-                      ->orWhere('deskripsi', 'like', '%' . $search . '%');
-                });
-            })
+            $query->where(function ($q) use ($search) {
+                $q->where('kode_mapel', 'like', '%'.$search.'%')
+                    ->orWhere('nama_mapel', 'like', '%'.$search.'%')
+                    ->orWhere('deskripsi', 'like', '%'.$search.'%');
+            });
+        })
             ->latest()
             ->paginate(10)
             ->withQueryString();

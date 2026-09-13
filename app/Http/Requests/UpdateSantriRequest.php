@@ -21,10 +21,11 @@ class UpdateSantriRequest extends FormRequest
             'jenis_kelamin' => ['required', 'in:L,P'],
             'tanggal_lahir' => ['nullable', 'date'],
             'alamat' => ['nullable', 'string'],
-            'kelas' => ['required', 'string', 'max:20'],
+            'kelas' => ['required', 'string', Rule::in(config('pesantren.kelas_allowed'))],
             'program' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'string', 'in:aktif,alumni,keluar'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->getUserId())],
+            'email_wali' => ['nullable', 'string', 'lowercase', 'email', 'max:255'],
 
             'telepon' => ['nullable', 'string', 'max:20'],
         ];

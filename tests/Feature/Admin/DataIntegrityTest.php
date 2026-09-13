@@ -24,7 +24,7 @@ class DataIntegrityTest extends TestCase
         $this->admin = User::factory()->create();
         $this->admin->role = UserRole::Admin->value;
         $this->admin->save();
-        $this->santri = \App\Models\Santri::factory()->create([
+        $this->santri = Santri::factory()->create([
             'nis' => '12345',
             'nama' => 'Test Santri',
             'jenis_kelamin' => 'L',

@@ -20,6 +20,7 @@ export default function SantriCreate() {
         program: '',
         status: 'aktif',
         email: '',
+        email_wali: '',
         password: '',
         telepon: '',
     });
@@ -104,6 +105,13 @@ export default function SantriCreate() {
                                 <InputLabel htmlFor="password" value="Password Baru" />
                                 <TextInput id="password" type="password" value={data.password} onChange={e => setData('password', e.target.value)} className="mt-1 block w-full" placeholder="Minimal 8 karakter" />
                                 <InputError message={errors.password} className="mt-2" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <InputLabel htmlFor="email_wali" value="Email Wali (opsional)" />
+                                <TextInput id="email_wali" type="email" value={data.email_wali} onChange={e => setData('email_wali', e.target.value)} className="mt-1 block w-full" placeholder="Email wali" />
+                                <InputError message={errors.email_wali} className="mt-2" />
                             </div>
                             <div>
                                 <InputLabel htmlFor="telepon" value="Telepon (opsional)" />

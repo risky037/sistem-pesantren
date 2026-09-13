@@ -19,6 +19,7 @@ class Santri extends Model
         'kelas',
         'program',
         'status',
+        'email_wali',
         'telepon',
     ];
 
