@@ -33,6 +33,7 @@ class SantriFactory extends Factory
             'kelas' => $this->faker->randomElement(['X-A', 'XI-A', 'XII-A']),
             'program' => $this->faker->randomElement(['Reguler', 'Tahfiz']),
             'status' => 'aktif',
+            'email_wali' => $this->faker->optional()->safeEmail(),
             'telepon' => $this->faker->phoneNumber(),
         ];
     }

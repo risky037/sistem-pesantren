@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('kelas');
             $table->string('program')->nullable();
             $table->string('status')->default('aktif');
+            $table->string('email_wali')->nullable();
             $table->string('telepon')->nullable();
             $table->timestamps();
         });

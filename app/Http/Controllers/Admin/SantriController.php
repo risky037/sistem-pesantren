@@ -81,6 +81,7 @@ class SantriController extends Controller
                 'kelas' => $validated['kelas'],
                 'program' => $validated['program'] ?? null,
                 'status' => $validated['status'] ?? 'aktif',
+                'email_wali' => $validated['email_wali'] ?? null,
                 'telepon' => $validated['telepon'] ?? null,
             ]);
         });
@@ -112,6 +113,7 @@ class SantriController extends Controller
                 'kelas' => $validated['kelas'],
                 'program' => $validated['program'] ?? null,
                 'status' => $validated['status'],
+                'email_wali' => $validated['email_wali'] ?? null,
                 'telepon' => $validated['telepon'] ?? null,
             ]);
 

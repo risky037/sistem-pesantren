@@ -3,26 +3,27 @@
 namespace App\Http\Controllers\Ustadz;
 
 use App\Http\Controllers\Controller;
-use App\Models\Santri;
 use App\Models\Penilaian;
+use App\Models\Santri;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SantriController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $filters = $request->only(['search']);
 
         $santris = Santri::when($filters['search'] ?? null, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('nis', 'like', '%' . $search . '%')
-                      ->orWhere('nama', 'like', '%' . $search . '%')
-                      ->orWhere('kelas', 'like', '%' . $search . '%')
-                      ->orWhere('program', 'like', '%' . $search . '%')
-                      ->orWhere('status', 'like', '%' . $search . '%');
-                });
-            })
+            $query->where(function ($q) use ($search) {
+                $q->where('nis', 'like', '%'.$search.'%')
+                    ->orWhere('nama', 'like', '%'.$search.'%')
+                    ->orWhere('kelas', 'like', '%'.$search.'%')
+                    ->orWhere('program', 'like', '%'.$search.'%')
+                    ->orWhere('status', 'like', '%'.$search.'%');
+            });
+        })
             ->latest()
             ->paginate(10)
             ->withQueryString();

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Ustadz;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
-use App\Models\Santri;
 use App\Models\Materi;
 use App\Models\Penilaian;
+use App\Models\Santri;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 

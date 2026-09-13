@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Materi;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreMateriRequest extends FormRequest
 {
@@ -18,7 +19,7 @@ class StoreMateriRequest extends FormRequest
             'subject_id' => ['required', 'exists:subjects,id'],
             'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string'],
-            'kelas' => ['nullable', 'string', 'max:20'],
+            'kelas' => ['nullable', 'string', Rule::in(config('pesantren.kelas_allowed'))],
             'file' => ['nullable', 'file', 'max:10240'], // 10MB max
             'published_at' => ['nullable', 'date'],
         ];
