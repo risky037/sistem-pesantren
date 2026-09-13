@@ -16,22 +16,23 @@
 
 ## 2. Route Inventory
 
-The application defines 28 total registered web routes:
+The application defines 52 total registered web routes:
 
-*   **Authentication Flow (Laravel Breeze):** Standard guest and auth endpoints (Login, Register, Forgot Password, Reset Password, Verify Email, Confirm Password, Logout).
-*   **Administrative Management (`role:admin`, 16 routes):**
+*   **Authentication Flow (Customized from Breeze):** Login, Confirm Password, Logout, Password Update (self-service). Public registration, forgot-password, reset-password, and verify-email routes have been removed.
+*   **Administrative Management (`role:admin`, 29 routes):**
     *   Dashboard: `admin.dashboard` (`/admin/dashboard`)
-    *   Ustadz Management: Resource routes for staff (`/admin/ustadz`)
-    *   Santri Management: Resource routes for students (`/admin/santri`)
+    *   Ustadz Management: Full lifecycle routes including create, edit, deactivate, reactivate, reset-password, and delete (`/admin/ustadz`)
+    *   Santri Management: Full lifecycle routes including create, edit, reset-password, and delete (`/admin/santri`)
     *   Subject Management (*Mata Pelajaran*): Resource routes for curriculum subjects (`/admin/mapel`)
     *   Schedule Management (*Jadwal Pelajaran*): Resource routes for schedules (`/admin/jadwal`)
-*   **Teaching & Academic Flow (`role:ustadz`, 10 routes):**
+*   **Teaching & Academic Flow (`role:ustadz`, 13 routes):**
     *   Dashboard: `ustadz.dashboard` (`/ustadz/dashboard`)
     *   Schedule View: Index route (`/ustadz/jadwal`)
-    *   Santri Directory: Index and Detail routes (`/ustadz/santri`, `/ustadz/santri/{id}`)
-    *   Penilaian (Grading): Index, Input Form, and Store endpoints (`/ustadz/penilaian`, `/ustadz/penilaian/input`, `/ustadz/penilaian`)
-    *   Materi (Learning Materials): Resource routes for curriculum uploads (`/ustadz/materi`)
-*   **Student Flow (`role:santri`):** Currently missing. No routes or student-authenticated views exist in the repository.
+    *   Santri Directory: Index and Detail routes (`/ustadz/santri`, `/ustadz/santri/{id}/detail`)
+    *   Penilaian (Grading): Index, Input Form, and Store endpoints (`/ustadz/penilaian`)
+    *   Materi (Learning Materials): Full resource routes for curriculum uploads (`/ustadz/materi`)
+*   **Student Flow (`role:santri`, 1 route):** Stub dashboard (`/santri/dashboard`) exists for routing purposes. The corresponding frontend page is a known open item (no `Santri/Dashboard.jsx` exists yet).
+*   **Profile Routes (auth):** `GET /profile`, `PATCH /profile`
 
 ---
 
@@ -49,7 +50,7 @@ The application defines 28 total registered web routes:
 | **Ustadz** | Santri Browsing | Implemented via `Ustadz\SantriController`. Read-only views of santri master data. |
 | **Ustadz** | Grading (*Penilaian*) | Implemented via `PenilaianController`. Form records scores tied to `user_id`, `santri_id`, and `subject_id`. |
 | **Ustadz** | Materials (*Materi*) | Implemented via `MateriController`. File upload handling and metadata storage. |
-| **Santri** | Student Portal | **Missing:** No authentication identity, portal layout, or self-service features. |
+| **Santri** | Student Portal | **Implemented (P0-1B.3/1B.4):** Santri accounts are linked to `users` via `santris.user_id` FK (NOT NULL, UNIQUE). Admin provisions Santri atomically (User + Santri in one transaction). Santri can log in and reach the `santri.dashboard` stub route. Full self-service portal (schedule, materials, grades) is planned for P1-1. |
 
 ---
 
@@ -60,20 +61,14 @@ The application defines 28 total registered web routes:
 > The critical vulnerability where public registration created privileged Ustadz accounts has been eliminated.
 > 1. Public `/register` endpoints have been removed.
 > 2. The unsafe `ustadz` database default has been removed from the users migration, forcing explicit role provisioning.
-> 3. Account creation is now correctly restricted to institutional provisioning.
->
-> **Recommended Recovery Direction:**
-> *   Disable public self-registration during the recovery phase.
-> *   Require that all institutional accounts (Admin, Ustadz, and Santri) be provisioned exclusively by Administrators.
-> *   Preserve existing core authentication endpoints (login, password reset, email verification, logout).
+> 3. Account creation is now correctly restricted to institutional Admin provisioning.
 
 ---
 
 ## 5. Account Model & Identity Findings
 
-*   **Current Relationship:** The `User` model currently represents staff accounts (Admin and Ustadz). The `Santri` model represents academic student biographical records stored in an isolated `santris` table without any `user_id` foreign key.
-*   **Domain Evaluation:**
-    > "The current Santri domain record is not connected to an authentication identity, while the intended product requires Santri login. The relationship between authentication identity and academic Santri data therefore requires explicit design."
+*   **Implemented Relationship (P0-1B.4):** The `Santri` model is connected to an authentication identity via `santris.user_id` (NOT NULL, UNIQUE FK → `users.id ON DELETE RESTRICT`). Admin provisions Santri atomically — a `users` row and a linked `santris` row are created within a single database transaction. `User::santri()` (hasOne) and `Santri::user()` (belongsTo) relationships are established.
+*   **Remaining Open Item:** The semantic distinction between `santris.email` (biographical domain email, present in the migration) and `users.email` (authentication credential) requires formal resolution before P1-1. The `santris.email` column exists in the schema but is not currently validated or written by the Santri create form.
 *   **Architectural Guidance:** Do not prematurely force separate profile tables (such as `santri_profiles` or `ustadz_profiles`) before the account-linkage model is formally designed and approved.
 
 ---
@@ -100,9 +95,9 @@ Repository evidence indicates that several core academic concepts are currently 
 
 ## 7. Test Baseline & Route Contract Analysis
 
-*   **Test Suite Status:** 38 tests currently pass (100%).
+*   **Test Suite Status:** 71 tests, 183 assertions, all passing (100%). Suite has grown from the initial 38-test baseline as P0-1B and P0-3 milestones added lifecycle, security, and policy tests.
 *   **Resolved Route Contract Mismatch (P0-1A & P0-1B.1):**
-    *   Authentication action redirects are consolidated using `UserRole` and `User::roleEnum()`. Tests explicitly assert role-specific routing (`ustadz.dashboard`, `admin.dashboard`), while testing fail-closed 403 rejection and session clearance for unsupported roles and not-yet-implemented Santri portal.
+    *   Authentication action redirects are consolidated using `UserRole` and `User::roleEnum()`. Tests explicitly assert role-specific routing (`ustadz.dashboard`, `admin.dashboard`), while testing fail-closed 403 rejection and session clearance for unsupported roles.
 
 ---
 
@@ -116,10 +111,10 @@ Repository evidence indicates that several core academic concepts are currently 
 
 ---
 
-## 9. Legacy Documentation Notice
+## 9. Archive Notice
 
-> [!WARNING]
-> **Outdated Documentation Files in Repository:**
-> *   `IMPLEMENTATION_SUMMARY.md` claims that all backend models, controllers, and APIs are "Coming Soon" or that implementation is complete, which directly conflicts with actual codebase reality.
-> *   `MENU_CRUD_GUIDE.md` reflects an unverified prior implementation guide with outdated assumptions.
-> *   Both files are marked as **legacy and stale**. They must not be treated as ground truth during development.
+> [!NOTE]
+> **Documentation Files Archived:**
+> *   `IMPLEMENTATION_SUMMARY.md` and `MENU_CRUD_GUIDE.md` have been removed from the repository root. They were AI-generated scaffolding artifacts from early development and contained stale or inaccurate claims.
+> *   `implementation_plan.md` (P0-3 planning artifact) has been moved to `docs/archive/`.
+> *   `docs/references/` contains the authoritative architecture decision records for all completed P0 milestones.

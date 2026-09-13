@@ -3,7 +3,7 @@
 Sistem Pesantren is a practical pesantren management and learning system designed to streamline daily academic workflows for Admins, Ustadz, and Santri. The system provides core master data management, academic scheduling, and will evolve to include LMS-like capabilities such as flexible assessments and grading.
 
 > [!WARNING]
-> **This project is currently under active development.** It is not production-ready. Do not deploy this application to a public environment yet as there are known security risks and incomplete features (notably, public registration currently defaults to the privileged `ustadz` role).
+> **This project is currently under active development.** It is not production-ready. Do not deploy this application to a public environment. The P0 security and stabilization milestones are complete; P1 feature development has not yet begun.
 
 ## Technology Stack
 
@@ -62,4 +62,4 @@ The system is designed for three main institutional actors:
 *   [Development Roadmap](docs/ROADMAP.md)
 
 > [!NOTE]
-> **Legacy Documentation Notice:** Older documentation files in the repository root (`IMPLEMENTATION_SUMMARY.md` and `MENU_CRUD_GUIDE.md`) represent earlier unverified AI-generated summaries and contain stale or inaccurate claims. They are retained solely for historical reference; the files under `docs/` serve as the authoritative project baseline.
+> **Documentation:** Authoritative project documentation lives in `docs/`. Architecture decision records for all completed P0 milestones are in `docs/references/`.

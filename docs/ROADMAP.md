@@ -17,17 +17,18 @@ P0-7 (Quality Baseline) <── P0-6 (UI Consistency) <── P0-5 (CRUD Audit) 
 ### P0-1: Security and Account Provisioning
 *   **[COMPLETED] P0-1A: Mitigate Public Registration Risk:** The vulnerability where `users.role` defaults to `ustadz` has been removed, and public `/register` endpoints have been disabled.
 *   **[COMPLETED] P0-1B.1: Typed Role Foundation & Consolidated Redirects:** Established `UserRole` backed enum, `User::roleEnum()`, centralized dashboard redirect routing (`admin.dashboard`, `ustadz.dashboard`), fail-closed authentication clearance for unsupported/Santri logins, and dual enum validation in `RoleMiddleware`.
-*   **[DEFERRED] P0-1B.2+ Account Identity & Lifecycle:** Santri authentication linkage (`santris.user_id`), atomic Santri provisioning, account deactivation (`is_active`), Admin-managed password resets, and deprecation of self-service password reset routes.
-*   **Administrative Provisioning:** Implement Admin-controlled provisioning workflows for institutional staff (Ustadz) and administrative accounts.
-*   **Authentication Route Preservation:** Ensure core authentication workflows (Login, Password Reset, Email Verification, Session Management) remain intact and secure.
+*   **[COMPLETED] P0-1B.2: Credential Lifecycle:** Deprecated self-service password reset routes (all return 404). Admin-managed password reset implemented for both Ustadz and Santri accounts via dedicated Admin routes.
+*   **[COMPLETED] P0-1B.3: Account Lifecycle:** `is_active` column added to `users` table. Inactive users are rejected at login and mid-session. Admin deactivate/reactivate workflows implemented for Ustadz accounts.
+*   **[COMPLETED] P0-1B.4: Santri Identity Architecture:** `santris.user_id` foreign key (NOT NULL, UNIQUE, RESTRICT) implemented. Atomic Santri provisioning creates User and Santri records within a single `DB::transaction`. `User::santri()` hasOne and `Santri::user()` belongsTo relationships established.
+*   **[COMPLETED] Administrative Provisioning:** Admin-controlled provisioning workflows implemented for Ustadz and Santri accounts. Email verification routes removed; account recovery is exclusively an Admin operation.
 
 ### P0-2: Test Baseline Recovery
 *   **[COMPLETED] Route Contract Resolution:** Resolved the mismatch where default starter-kit tests expected a generic `route('dashboard')` by aligning assertions with role-specific routing (`ustadz.dashboard`, `admin.dashboard`).
 *   **[COMPLETED] Test Suite Green Baseline:** The PHPUnit test suite now achieves a 100% passing rate.
 
 ### P0-3: Authorization Audit
-*   **Policy Enforcement:** Create and register Laravel Policies for all core models (`Subject`, `Jadwal`, `Penilaian`, `Materi`).
-*   **Privilege Boundary Verification:** Ensure Ustadz can only view and modify records tied to their assigned classes, subjects, and materials. Prevent horizontal and vertical privilege escalation across all endpoints.
+*   **[COMPLETED] Policy Enforcement:** `MateriPolicy`, `PenilaianPolicy`, and `JadwalPolicy` created, registered via Laravel auto-discovery, and applied in controllers via `Gate::authorize()`. All policies implement `before()` to grant Admin unrestricted access.
+*   **[COMPLETED] Privilege Boundary Verification:** `StorePenilaianRequest::authorize()` enforces Jadwal-membership validation, ensuring Ustadz can only submit grades for Santri in their assigned classes. `MateriPolicy` enforces ownership on edit, update, and delete. Horizontal and vertical privilege escalation prevented across all ustadz endpoints.
 
 ### P0-4: Database and Domain Integrity
 *   **Referential Integrity & Indexing:** Audit migrations to ensure proper foreign key constraints, cascading delete/nullify behaviors, and query-aware composite indexes.
