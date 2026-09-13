@@ -12,12 +12,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('subject_id')->constrained()->onDelete('restrict');
+            $table->foreignId('academic_period_id')->constrained()->onDelete('restrict');
             $table->string('hari');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->string('kelas');
             $table->string('ruang')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id', 'subject_id', 'kelas', 'hari', 'jam_mulai', 'academic_period_id'], 'jadwal_unique');
         });
     }
 

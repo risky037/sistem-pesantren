@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Penilaian;
 use App\Models\User;
 
@@ -57,6 +58,11 @@ class PenilaianPolicy
      */
     public function update(User $user, Penilaian $penilaian): bool
     {
+        $activePeriod = AcademicPeriod::requireActive();
+        if ($penilaian->academic_period_id !== $activePeriod->id) {
+            return false;
+        }
+
         return $user->id === $penilaian->user_id;
     }
 

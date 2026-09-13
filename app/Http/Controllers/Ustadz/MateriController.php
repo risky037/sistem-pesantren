@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ustadz;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMateriRequest;
 use App\Http\Requests\UpdateMateriRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Materi;
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -19,10 +20,13 @@ class MateriController extends Controller
     {
         Gate::authorize('viewAny', Materi::class);
 
+        $activePeriod = AcademicPeriod::requireActive();
+
         $filters = $request->only(['search', 'subject_id', 'kelas']);
 
         $materis = Materi::with('subject')
             ->where('user_id', Auth::id())
+            ->where('academic_period_id', $activePeriod->id)
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('judul', 'like', '%'.$search.'%')
@@ -43,7 +47,7 @@ class MateriController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $kelasList = Materi::where('user_id', Auth::id())->whereNotNull('kelas')->select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
+        $kelasList = Materi::where('user_id', Auth::id())->where('academic_period_id', $activePeriod->id)->whereNotNull('kelas')->select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
 
         return Inertia::render('Ustadz/Materi/Index', [
             'materis' => $materis,
@@ -66,6 +70,7 @@ class MateriController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = Auth::id();
+        $data['academic_period_id'] = AcademicPeriod::requireActive()->id;
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');

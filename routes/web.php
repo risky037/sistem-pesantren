@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AcademicPeriodController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
 use App\Http\Controllers\Admin\SantriController as AdminSantriController;
@@ -22,6 +23,15 @@ Route::get('/', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Academic Period Management
+    Route::get('/academic-period', [AcademicPeriodController::class, 'index'])->name('academic-period.index');
+    Route::get('/academic-period/create', [AcademicPeriodController::class, 'create'])->name('academic-period.create');
+    Route::post('/academic-period', [AcademicPeriodController::class, 'store'])->name('academic-period.store');
+    Route::get('/academic-period/{academic_period}/edit', [AcademicPeriodController::class, 'edit'])->name('academic-period.edit');
+    Route::put('/academic-period/{academic_period}', [AcademicPeriodController::class, 'update'])->name('academic-period.update');
+    Route::delete('/academic-period/{academic_period}', [AcademicPeriodController::class, 'destroy'])->name('academic-period.destroy');
+    Route::post('/academic-period/{academic_period}/activate', [AcademicPeriodController::class, 'activate'])->name('academic-period.activate');
 
     // Ustadz Management
     Route::get('/ustadz', [UstadzController::class, 'index'])->name('ustadz.index');

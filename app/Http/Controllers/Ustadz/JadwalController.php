@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ustadz;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -16,10 +17,13 @@ class JadwalController extends Controller
     {
         Gate::authorize('viewAny', Jadwal::class);
 
+        $activePeriod = AcademicPeriod::requireActive();
+
         $filters = $request->only(['search', 'hari', 'subject_id']);
 
         $jadwals = Jadwal::with('subject')
             ->where('user_id', Auth::id())
+            ->where('academic_period_id', $activePeriod->id)
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('hari', 'like', '%'.$search.'%')

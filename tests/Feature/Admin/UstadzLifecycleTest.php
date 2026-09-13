@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Materi;
 use App\Models\Penilaian;
@@ -76,8 +77,10 @@ class UstadzLifecycleTest extends TestCase
 
     public function test_admin_cannot_delete_ustadz_with_jadwal_records(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
         Jadwal::create([
+            'academic_period_id' => $period->id,
             'user_id' => $this->ustadz->id,
             'subject_id' => $subject->id,
             'hari' => 'Senin',
@@ -95,8 +98,10 @@ class UstadzLifecycleTest extends TestCase
 
     public function test_admin_cannot_delete_ustadz_with_materi_records(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
         Materi::create([
+            'academic_period_id' => $period->id,
             'user_id' => $this->ustadz->id,
             'subject_id' => $subject->id,
             'judul' => 'Test Materi',
@@ -111,6 +116,7 @@ class UstadzLifecycleTest extends TestCase
 
     public function test_admin_cannot_delete_ustadz_with_penilaian_records(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
         $santri = Santri::factory()->create([
             'nis' => '12345',
@@ -123,6 +129,7 @@ class UstadzLifecycleTest extends TestCase
             'status' => 'aktif',
         ]);
         Penilaian::create([
+            'academic_period_id' => $period->id,
             'user_id' => $this->ustadz->id,
             'subject_id' => $subject->id,
             'santri_id' => $santri->id,
