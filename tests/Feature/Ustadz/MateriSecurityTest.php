@@ -3,6 +3,7 @@
 namespace Tests\Feature\Ustadz;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Materi;
 use App\Models\Subject;
 use App\Models\User;
@@ -15,12 +16,14 @@ class MateriSecurityTest extends TestCase
 
     public function test_ustadz_cannot_edit_another_ustadz_materi(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $ustadzA = User::factory()->create(['role' => UserRole::Ustadz]);
         $ustadzB = User::factory()->create(['role' => UserRole::Ustadz]);
 
         $subject = Subject::create(['nama_mapel' => 'Test Subject', 'kode_mapel' => 'TS01']);
 
         $materiA = Materi::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadzA->id,
             'subject_id' => $subject->id,
             'judul' => 'Materi A',
@@ -33,12 +36,14 @@ class MateriSecurityTest extends TestCase
 
     public function test_ustadz_cannot_update_another_ustadz_materi(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $ustadzA = User::factory()->create(['role' => UserRole::Ustadz]);
         $ustadzB = User::factory()->create(['role' => UserRole::Ustadz]);
 
         $subject = Subject::create(['nama_mapel' => 'Test Subject', 'kode_mapel' => 'TS01']);
 
         $materiA = Materi::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadzA->id,
             'subject_id' => $subject->id,
             'judul' => 'Materi A',
@@ -60,12 +65,14 @@ class MateriSecurityTest extends TestCase
 
     public function test_ustadz_cannot_delete_another_ustadz_materi(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $ustadzA = User::factory()->create(['role' => UserRole::Ustadz]);
         $ustadzB = User::factory()->create(['role' => UserRole::Ustadz]);
 
         $subject = Subject::create(['nama_mapel' => 'Test Subject', 'kode_mapel' => 'TS01']);
 
         $materiA = Materi::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadzA->id,
             'subject_id' => $subject->id,
             'judul' => 'Materi A',

@@ -12,6 +12,7 @@ class Jadwal extends Model
     protected $fillable = [
         'user_id',
         'subject_id',
+        'academic_period_id',
         'hari',
         'jam_mulai',
         'jam_selesai',
@@ -27,5 +28,10 @@ class Jadwal extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function academicPeriod()
+    {
+        return $this->belongsTo(AcademicPeriod::class);
     }
 }

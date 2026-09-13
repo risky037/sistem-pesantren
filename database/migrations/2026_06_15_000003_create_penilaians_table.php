@@ -13,14 +13,16 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('santri_id')->constrained()->onDelete('restrict');
             $table->foreignId('subject_id')->constrained()->onDelete('restrict');
+            $table->foreignId('academic_period_id')->constrained()->onDelete('restrict');
             $table->decimal('tugas', 5, 2)->nullable();
             $table->decimal('uts', 5, 2)->nullable();
             $table->decimal('uas', 5, 2)->nullable();
             $table->decimal('nilai_akhir', 5, 2)->nullable();
             $table->text('catatan')->nullable();
+
             $table->timestamps();
 
-            $table->unique(['santri_id', 'subject_id', 'user_id'], 'penilaian_unique');
+            $table->unique(['santri_id', 'subject_id', 'user_id', 'academic_period_id'], 'penilaian_unique');
         });
     }
 

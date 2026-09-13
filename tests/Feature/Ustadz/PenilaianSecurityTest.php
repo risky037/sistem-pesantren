@@ -3,6 +3,7 @@
 namespace Tests\Feature\Ustadz;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Santri;
 use App\Models\Subject;
@@ -16,6 +17,7 @@ class PenilaianSecurityTest extends TestCase
 
     public function test_ustadz_cannot_create_penilaian_for_unrelated_santri(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $ustadz = User::factory()->create(['role' => UserRole::Ustadz]);
         $subject = Subject::create(['nama_mapel' => 'Test Subject', 'kode_mapel' => 'TS01']);
 
@@ -31,6 +33,7 @@ class PenilaianSecurityTest extends TestCase
 
         // Give the ustadz a jadwal but for a DIFFERENT kelas
         Jadwal::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadz->id,
             'subject_id' => $subject->id,
             'kelas' => '10-A',
@@ -59,6 +62,7 @@ class PenilaianSecurityTest extends TestCase
 
     public function test_ustadz_can_create_penilaian_for_assigned_santri(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $ustadz = User::factory()->create(['role' => UserRole::Ustadz]);
         $subject = Subject::create(['nama_mapel' => 'Test Subject', 'kode_mapel' => 'TS01']);
 
@@ -73,6 +77,7 @@ class PenilaianSecurityTest extends TestCase
         ]);
 
         Jadwal::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadz->id,
             'subject_id' => $subject->id,
             'kelas' => '10-A',

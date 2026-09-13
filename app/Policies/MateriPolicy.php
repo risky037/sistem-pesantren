@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Materi;
 use App\Models\User;
 
@@ -57,6 +58,11 @@ class MateriPolicy
      */
     public function update(User $user, Materi $materi): bool
     {
+        $activePeriod = AcademicPeriod::requireActive();
+        if ($materi->academic_period_id !== $activePeriod->id) {
+            return false;
+        }
+
         return $user->id === $materi->user_id;
     }
 
@@ -65,6 +71,11 @@ class MateriPolicy
      */
     public function delete(User $user, Materi $materi): bool
     {
+        $activePeriod = AcademicPeriod::requireActive();
+        if ($materi->academic_period_id !== $activePeriod->id) {
+            return false;
+        }
+
         return $user->id === $materi->user_id;
     }
 }

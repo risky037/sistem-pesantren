@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Materi;
 use App\Models\Penilaian;
@@ -16,6 +17,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // === Academic Period ===
+        $period = AcademicPeriod::create([
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'is_active' => true,
+        ]);
+        $activePeriodId = $period->id;
+
         // === Users ===
         $admin = User::forceCreate([
             'name' => 'Super Admin',
@@ -76,18 +85,18 @@ class DatabaseSeeder extends Seeder
         $santri2 = $santriModels[1];
 
         // === Jadwal ===
-        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'hari' => 'Senin', 'jam_mulai' => '08:00', 'jam_selesai' => '09:30', 'kelas' => 'XII-A', 'ruang' => 'Ruang 1']);
-        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'hari' => 'Selasa', 'jam_mulai' => '09:30', 'jam_selesai' => '11:00', 'kelas' => 'XII-B', 'ruang' => 'Ruang 2']);
-        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $hadis->id, 'hari' => 'Rabu', 'jam_mulai' => '13:00', 'jam_selesai' => '14:30', 'kelas' => 'XI-A', 'ruang' => 'Ruang 3']);
-        Jadwal::create(['user_id' => $ustadz2->id, 'subject_id' => $quran->id, 'hari' => 'Senin', 'jam_mulai' => '10:00', 'jam_selesai' => '11:30', 'kelas' => 'XII-A', 'ruang' => 'Ruang 4']);
-        Jadwal::create(['user_id' => $ustadz2->id, 'subject_id' => $akidah->id, 'hari' => 'Kamis', 'jam_mulai' => '08:00', 'jam_selesai' => '09:30', 'kelas' => 'XI-A', 'ruang' => 'Ruang 1']);
+        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'hari' => 'Senin', 'jam_mulai' => '08:00', 'jam_selesai' => '09:30', 'kelas' => 'XII-A', 'ruang' => 'Ruang 1']);
+        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'hari' => 'Selasa', 'jam_mulai' => '09:30', 'jam_selesai' => '11:00', 'kelas' => 'XII-B', 'ruang' => 'Ruang 2']);
+        Jadwal::create(['user_id' => $ustadz->id, 'subject_id' => $hadis->id, 'academic_period_id' => $activePeriodId, 'hari' => 'Rabu', 'jam_mulai' => '13:00', 'jam_selesai' => '14:30', 'kelas' => 'XI-A', 'ruang' => 'Ruang 3']);
+        Jadwal::create(['user_id' => $ustadz2->id, 'subject_id' => $quran->id, 'academic_period_id' => $activePeriodId, 'hari' => 'Senin', 'jam_mulai' => '10:00', 'jam_selesai' => '11:30', 'kelas' => 'XII-A', 'ruang' => 'Ruang 4']);
+        Jadwal::create(['user_id' => $ustadz2->id, 'subject_id' => $akidah->id, 'academic_period_id' => $activePeriodId, 'hari' => 'Kamis', 'jam_mulai' => '08:00', 'jam_selesai' => '09:30', 'kelas' => 'XI-A', 'ruang' => 'Ruang 1']);
 
         // === Penilaian (sample for ustadz + fiqih + XII-A students) ===
-        Penilaian::create(['user_id' => $ustadz->id, 'santri_id' => $santri1->id, 'subject_id' => $fiqih->id, 'tugas' => 85, 'uts' => 88, 'uas' => 90, 'nilai_akhir' => 87.67]);
-        Penilaian::create(['user_id' => $ustadz->id, 'santri_id' => $santri2->id, 'subject_id' => $fiqih->id, 'tugas' => 78, 'uts' => 82, 'uas' => 85, 'nilai_akhir' => 81.67]);
+        Penilaian::create(['user_id' => $ustadz->id, 'santri_id' => $santri1->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'tugas' => 85, 'uts' => 88, 'uas' => 90, 'nilai_akhir' => 87.67]);
+        Penilaian::create(['user_id' => $ustadz->id, 'santri_id' => $santri2->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'tugas' => 78, 'uts' => 82, 'uas' => 85, 'nilai_akhir' => 81.67]);
 
         // === Materi (sample) ===
-        Materi::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'judul' => 'Rukun Islam', 'deskripsi' => 'Materi tentang 5 rukun Islam', 'kelas' => 'XII-A', 'published_at' => '2024-01-15']);
-        Materi::create(['user_id' => $ustadz->id, 'subject_id' => $hadis->id, 'judul' => 'Hadis Arbain Nawawi', 'deskripsi' => 'Kumpulan 40 hadis pilihan Imam Nawawi', 'kelas' => 'XI-A', 'published_at' => '2024-01-20']);
+        Materi::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'judul' => 'Rukun Islam', 'deskripsi' => 'Materi tentang 5 rukun Islam', 'kelas' => 'XII-A', 'published_at' => '2024-01-15']);
+        Materi::create(['user_id' => $ustadz->id, 'subject_id' => $hadis->id, 'academic_period_id' => $activePeriodId, 'judul' => 'Hadis Arbain Nawawi', 'deskripsi' => 'Kumpulan 40 hadis pilihan Imam Nawawi', 'kelas' => 'XI-A', 'published_at' => '2024-01-20']);
     }
 }

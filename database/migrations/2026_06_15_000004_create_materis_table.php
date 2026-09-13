@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('subject_id')->constrained()->onDelete('restrict');
+            $table->foreignId('academic_period_id')->constrained()->onDelete('restrict');
             $table->string('judul');
             $table->text('deskripsi')->nullable();
             $table->string('kelas')->nullable();

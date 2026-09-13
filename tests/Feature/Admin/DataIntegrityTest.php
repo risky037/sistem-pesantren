@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Enums\UserRole;
+use App\Models\AcademicPeriod;
 use App\Models\Penilaian;
 use App\Models\Santri;
 use App\Models\Subject;
@@ -38,10 +39,12 @@ class DataIntegrityTest extends TestCase
 
     public function test_santri_cannot_be_deleted_with_penilaian_records(): void
     {
+        $period = AcademicPeriod::first() ?? AcademicPeriod::create(['tahun_ajaran' => '2025/2026', 'semester' => 'Ganjil', 'is_active' => true]);
         $subject = Subject::create(['nama_mapel' => 'Test', 'kode_mapel' => 'TST', 'tingkat' => '10']);
         $ustadz = User::factory()->create(['role' => UserRole::Ustadz->value]);
 
         Penilaian::create([
+            'academic_period_id' => $period->id,
             'user_id' => $ustadz->id,
             'subject_id' => $subject->id,
             'santri_id' => $this->santri->id,

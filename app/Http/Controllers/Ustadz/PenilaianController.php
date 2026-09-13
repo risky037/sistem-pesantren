@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Ustadz;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePenilaianRequest;
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Penilaian;
 use App\Models\Santri;
@@ -21,21 +22,26 @@ class PenilaianController extends Controller
 
         $userId = Auth::id();
         $search = $request->input('search');
+        $activePeriod = AcademicPeriod::requireActive();
 
         // Get subjects this ustadz teaches via jadwal
-        $subjectIds = Jadwal::where('user_id', $userId)->pluck('subject_id')->unique();
+        $subjectIds = Jadwal::where('user_id', $userId)
+            ->where('academic_period_id', $activePeriod->id)
+            ->pluck('subject_id')->unique();
         $subjects = Subject::whereIn('id', $subjectIds)->get();
 
         // Build summary: for each subject, count total santri and graded santri
-        $summary = $subjects->map(function ($subject) use ($userId) {
+        $summary = $subjects->map(function ($subject) use ($userId, $activePeriod) {
             $kelasForSubject = Jadwal::where('user_id', $userId)
                 ->where('subject_id', $subject->id)
+                ->where('academic_period_id', $activePeriod->id)
                 ->pluck('kelas')
                 ->unique();
 
             $totalSantri = Santri::whereIn('kelas', $kelasForSubject)->count();
             $gradedSantri = Penilaian::where('user_id', $userId)
                 ->where('subject_id', $subject->id)
+                ->where('academic_period_id', $activePeriod->id)
                 ->count();
 
             return [
@@ -71,10 +77,12 @@ class PenilaianController extends Controller
 
         $userId = Auth::id();
         $subject = Subject::findOrFail($subjectId);
+        $activePeriod = AcademicPeriod::requireActive();
 
         // Get kelas that this ustadz teaches for this subject
         $kelasForSubject = Jadwal::where('user_id', $userId)
             ->where('subject_id', $subjectId)
+            ->where('academic_period_id', $activePeriod->id)
             ->pluck('kelas')
             ->unique();
 
@@ -83,6 +91,7 @@ class PenilaianController extends Controller
         // Get existing grades
         $existingGrades = Penilaian::where('user_id', $userId)
             ->where('subject_id', $subjectId)
+            ->where('academic_period_id', $activePeriod->id)
             ->get()
             ->keyBy('santri_id');
 
@@ -121,11 +130,14 @@ class PenilaianController extends Controller
                 $nilaiAkhir = round($sum / $count, 2);
             }
 
+            $activePeriod = AcademicPeriod::requireActive();
+
             Penilaian::updateOrCreate(
                 [
                     'user_id' => $userId,
                     'santri_id' => $grade['santri_id'],
                     'subject_id' => $subjectId,
+                    'academic_period_id' => $activePeriod->id,
                 ],
                 [
                     'tugas' => $tugas,

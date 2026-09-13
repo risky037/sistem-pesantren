@@ -13,11 +13,13 @@ class Penilaian extends Model
         'user_id',
         'santri_id',
         'subject_id',
+        'academic_period_id',
         'tugas',
         'uts',
         'uas',
         'nilai_akhir',
         'catatan',
+
     ];
 
     protected function casts(): array
@@ -27,6 +29,7 @@ class Penilaian extends Model
             'uts' => 'decimal:2',
             'uas' => 'decimal:2',
             'nilai_akhir' => 'decimal:2',
+
         ];
     }
 
@@ -43,5 +46,10 @@ class Penilaian extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function academicPeriod()
+    {
+        return $this->belongsTo(AcademicPeriod::class);
     }
 }
