@@ -4,27 +4,30 @@ namespace App\Http\Controllers\Ustadz;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-
 use App\Models\Subject;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class JadwalController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
+        Gate::authorize('viewAny', Jadwal::class);
+
         $filters = $request->only(['search', 'hari', 'subject_id']);
 
         $jadwals = Jadwal::with('subject')
             ->where('user_id', Auth::id())
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('hari', 'like', '%' . $search . '%')
-                      ->orWhere('kelas', 'like', '%' . $search . '%')
-                      ->orWhere('ruang', 'like', '%' . $search . '%')
-                      ->orWhereHas('subject', function ($q2) use ($search) {
-                          $q2->where('nama_mapel', 'like', '%' . $search . '%');
-                      });
+                    $q->where('hari', 'like', '%'.$search.'%')
+                        ->orWhere('kelas', 'like', '%'.$search.'%')
+                        ->orWhere('ruang', 'like', '%'.$search.'%')
+                        ->orWhereHas('subject', function ($q2) use ($search) {
+                            $q2->where('nama_mapel', 'like', '%'.$search.'%');
+                        });
                 });
             })
             ->when($filters['hari'] ?? null, function ($query, $hari) {

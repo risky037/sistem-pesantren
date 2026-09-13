@@ -2,11 +2,18 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Materi;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMateriRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        $materiId = $this->route('id');
+        $materi = Materi::find($materiId);
+
+        return $materi && $this->user()->can('update', $materi);
+    }
 
     public function rules(): array
     {

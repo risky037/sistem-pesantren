@@ -8,13 +8,17 @@ use App\Models\Jadwal;
 use App\Models\Penilaian;
 use App\Models\Santri;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class PenilaianController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
+        Gate::authorize('viewAny', Penilaian::class);
+
         $userId = Auth::id();
         $search = $request->input('search');
 
@@ -50,6 +54,7 @@ class PenilaianController extends Controller
                 $matchKelas = collect($item['kelas'])->contains(function ($k) use ($searchLower) {
                     return str_contains(strtolower($k), $searchLower);
                 });
+
                 return $matchNama || $matchKelas;
             });
         }
@@ -62,6 +67,8 @@ class PenilaianController extends Controller
 
     public function input($subjectId)
     {
+        Gate::authorize('create', Penilaian::class);
+
         $userId = Auth::id();
         $subject = Subject::findOrFail($subjectId);
 
@@ -98,10 +105,21 @@ class PenilaianController extends Controller
             $nilaiAkhir = null;
             $count = 0;
             $sum = 0;
-            if ($tugas !== null) { $sum += $tugas; $count++; }
-            if ($uts !== null) { $sum += $uts; $count++; }
-            if ($uas !== null) { $sum += $uas; $count++; }
-            if ($count > 0) { $nilaiAkhir = round($sum / $count, 2); }
+            if ($tugas !== null) {
+                $sum += $tugas;
+                $count++;
+            }
+            if ($uts !== null) {
+                $sum += $uts;
+                $count++;
+            }
+            if ($uas !== null) {
+                $sum += $uas;
+                $count++;
+            }
+            if ($count > 0) {
+                $nilaiAkhir = round($sum / $count, 2);
+            }
 
             Penilaian::updateOrCreate(
                 [
