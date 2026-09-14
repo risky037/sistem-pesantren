@@ -18,7 +18,19 @@ class AcademicPeriodFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'tahun_ajaran' => '2025/2026',
+            'semester' => 'Ganjil',
+            'is_active' => false,
         ];
+    }
+
+    /**
+     * Indicate that the academic period is active.
+     */
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => true,
+        ]);
     }
 }
