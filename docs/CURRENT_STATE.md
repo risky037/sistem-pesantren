@@ -31,7 +31,7 @@ The application defines 52 total registered web routes:
     *   Santri Directory: Index and Detail routes (`/ustadz/santri`, `/ustadz/santri/{id}/detail`)
     *   Penilaian (Grading): Index, Input Form, and Store endpoints (`/ustadz/penilaian`)
     *   Materi (Learning Materials): Full resource routes for curriculum uploads (`/ustadz/materi`)
-*   **Student Flow (`role:santri`, 1 route):** Stub dashboard (`/santri/dashboard`) exists for routing purposes. The corresponding frontend page is a known open item (no `Santri/Dashboard.jsx` exists yet).
+*   **Student Flow (`role:santri`):** Fully functional dashboard and self-service portal for schedule, materials, and grades.
 *   **Profile Routes (auth):** `GET /profile`, `PATCH /profile`
 
 ---
@@ -50,7 +50,7 @@ The application defines 52 total registered web routes:
 | **Ustadz** | Santri Browsing | Implemented via `Ustadz\SantriController`. Read-only views of santri master data. |
 | **Ustadz** | Grading (*Penilaian*) | Implemented via `PenilaianController`. Form records scores tied to `user_id`, `santri_id`, and `subject_id`. |
 | **Ustadz** | Materials (*Materi*) | Implemented via `MateriController`. File upload handling and metadata storage. |
-| **Santri** | Student Portal | **Implemented (P0-1B.3/1B.4):** Santri accounts are linked to `users` via `santris.user_id` FK (NOT NULL, UNIQUE). Admin provisions Santri atomically (User + Santri in one transaction). Santri can log in and reach the `santri.dashboard` stub route. Full self-service portal (schedule, materials, grades) is planned for P1-1. |
+| **Santri** | Student Portal | **Implemented (P1-1/P1-2):** Full self-service portal is live. Santri can log in to view their schedule, browse materials, and check published grades securely. |
 
 ---
 
@@ -81,9 +81,9 @@ Repository evidence indicates that several core academic concepts are currently 
     *   In the `jadwals` and `santris` tables, the class or group is stored as a free-form string (e.g., `'10-A'`, `'Kelas 7'`).
     *   *Problem:* Without structural constraints, typo variations (e.g., `'X-A'` vs `'10-A'`) cause fragmented queries and prevent reliable cohort reporting.
     *   *Architectural Guidance:* Describe the domain problem clearly before prescribing solutions; do not prematurely prescribe a dedicated `ClassModel` merely because `kelas` is currently a string.
-2.  **Missing Academic Year & Semester Modeling:**
-    *   The schema possesses no representation of an **Academic Year** (e.g., `2025/2026`) or **Semester** (Odd/Even).
-    *   *Impact:* Academic data currently lacks clear temporal scoping. Grades in `penilaians`, schedules in `jadwals`, and files in `materis` accumulate indefinitely without temporal partition boundaries, preventing historical term archiving or term-based filtering.
+2.  **Resolved: Academic Year & Semester Modeling:**
+    *   The `academic_periods` table provides a single temporal anchor for all academic domain records.
+    *   *Status:* Implemented. `jadwals`, `penilaians`, and `materis` are correctly scoped to the active period.
 3.  **Unconstrained Schedule Days (`hari`):**
     *   In the `jadwals` table, the day of the week is stored as a raw string (`$table->string('hari')`).
     *   *Impact:* Inconsistent values (e.g., `'Senin'` vs `'senin'` or abbreviations) can degrade query reliability.

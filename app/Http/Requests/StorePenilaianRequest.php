@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AcademicPeriod;
 use App\Models\Jadwal;
 use App\Models\Penilaian;
 use App\Models\Santri;
@@ -29,8 +30,15 @@ class StorePenilaianRequest extends FormRequest
         }
 
         // Check if the current user teaches these santri for this subject
+        $activePeriodId = AcademicPeriod::active()->first()?->id;
+
+        if (! $activePeriodId) {
+            return false;
+        }
+
         $validClasses = Jadwal::where('user_id', $this->user()->id)
             ->where('subject_id', $subjectId)
+            ->where('academic_period_id', $activePeriodId)
             ->pluck('kelas');
 
         if ($validClasses->isEmpty()) {

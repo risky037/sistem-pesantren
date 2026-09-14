@@ -57,14 +57,14 @@ P0-7 (Quality Baseline) <── P0-6 (UI Consistency) <── P0-5 (CRUD Audit) 
 
 *Phase 1 commences strictly after Phase 0 sign-off.*
 
-### P1-1: Santri Authenticated Portal Foundation
-*   Formally design and implement the connection between student authentication identities (`users`) and academic student records (`santris`).
-*   Establish Admin-provisioned credentials or secure onboarding for Santri.
-*   Build the Santri authenticated layout, personal schedule viewer, and learning material download interface.
+### [COMPLETED] P1-1: Santri Authenticated Portal Foundation
+*   **[COMPLETED]** Formally design and implement the connection between student authentication identities (`users`) and academic student records (`santris`).
+*   **[COMPLETED]** Establish Admin-provisioned credentials or secure onboarding for Santri.
+*   **[COMPLETED]** Build the Santri authenticated layout, personal schedule viewer, and learning material download interface.
 
-### P1-2: Assignment Domain
-*   Model curriculum assignments tied to specific subjects, teachers, classes, and academic terms.
-*   Define assignment parameters: instructions, submission deadlines, and file attachment support.
+### [COMPLETED] P1-2: Assignment Domain
+*   **[COMPLETED]** Model curriculum assignments tied to specific subjects, teachers, classes, and academic terms.
+*   **[COMPLETED]** Define assignment parameters: instructions, submission deadlines, and file attachment support.
 
 ### P1-3: Flexible Question Model
 *   Design a flexible data representation supporting both multiple-choice and essay question formats without premature schema complexity.
