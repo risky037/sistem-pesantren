@@ -235,16 +235,13 @@ LAYER 3 — academic_period_id on penilaians (P0-4)
 
 LAYER 4 — academic_period_id on materis (P0-4)
 ──────────────────────────────────────────────────────────────────────
-  4a. Add academic_period_id FK to materis (nullable initially)
+  4a. Add academic_period_id FK to materis (NOT NULL)
       ↳ Edit create_materis_table migration.
-      ↳ nullable() FK: ON DELETE SET NULL.
-      ↳ Rationale: materials are less tightly bound to a period than grades or schedules.
-        A published document (e.g. a reference syllabus) may intentionally span periods.
-        Setting to nullable prevents seeder complexity and allows legacy records to survive.
+      ↳ FK: ON DELETE RESTRICT.
+      ↳ Rationale: materials are tightly bound to a period for the P1 milestone. The reusable curriculum library feature is deferred.
       ↳ Seeder: optionally assign seeded materis to the default active period.
       ↳ MateriController: when creating, default to AcademicPeriod::active()->id if available.
-      ↳ Santri portal materi filter: WHERE academic_period_id = active OR academic_period_id IS NULL
-        (shows current + perennial materials).
+      ↳ Santri portal materi filter: WHERE academic_period_id = active.
 
 
 LAYER 5 — P1-1 Santri Portal Foundations
@@ -427,5 +424,5 @@ penilaians
 | Period filter for teaching scope | **Filter all scope queries by `AcademicPeriod::active()`** — approved |
 | `penilaians` unique key | **Expand to include `academic_period_id`** — approved |
 | Grade release control | **`is_published` boolean on `penilaians`** — approved |
-| `materis.academic_period_id` | **Nullable FK, SET NULL** — perennial materials supported |
+| `materis.academic_period_id` | **NOT NULL, RESTRICT** — perennial materials deferred |
 | `jadwals` composite unique | **Added with `academic_period_id`** — approved |
