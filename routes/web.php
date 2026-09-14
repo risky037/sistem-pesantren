@@ -7,6 +7,9 @@ use App\Http\Controllers\Admin\SantriController as AdminSantriController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UstadzController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Santri\DashboardController;
+use App\Http\Controllers\Santri\GradeController;
+use App\Http\Controllers\Santri\ScheduleController;
 use App\Http\Controllers\Ustadz\DashboardController as UstadzDashboardController;
 use App\Http\Controllers\Ustadz\JadwalController as UstadzJadwalController;
 use App\Http\Controllers\Ustadz\MateriController;
@@ -104,9 +107,9 @@ Route::middleware('auth')->group(function () {
 
 // Grup Rute Santri
 Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Santri/Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
+    Route::get('/grades', [GradeController::class, 'index'])->name('grades');
 });
 
 require __DIR__.'/auth.php';
