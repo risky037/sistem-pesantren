@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Santri\DashboardController;
 use App\Http\Controllers\Santri\GradeController;
 use App\Http\Controllers\Santri\ScheduleController;
+use App\Http\Controllers\Ustadz\AssignmentController;
 use App\Http\Controllers\Ustadz\DashboardController as UstadzDashboardController;
 use App\Http\Controllers\Ustadz\JadwalController as UstadzJadwalController;
 use App\Http\Controllers\Ustadz\MateriController;
@@ -97,6 +98,16 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
     Route::get('/materi/{id}/edit', [MateriController::class, 'edit'])->name('materi.edit');
     Route::put('/materi/{id}', [MateriController::class, 'update'])->name('materi.update');
     Route::delete('/materi/{id}', [MateriController::class, 'destroy'])->name('materi.destroy');
+
+    // LMS Assignments (Ustadz)
+    Route::get('/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
+    Route::post('/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('/assignments/{assignment}/edit', [AssignmentController::class, 'edit'])->name('assignments.edit');
+    Route::put('/assignments/{assignment}', [AssignmentController::class, 'update'])->name('assignments.update');
+    Route::delete('/assignments/{assignment}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
+    Route::patch('/assignments/{assignment}/open', [AssignmentController::class, 'open'])->name('assignments.open');
+    Route::patch('/assignments/{assignment}/close', [AssignmentController::class, 'close'])->name('assignments.close');
 });
 
 // Profile Routes (Breeze)

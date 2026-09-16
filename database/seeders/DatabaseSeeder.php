@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Models\AcademicPeriod;
+use App\Models\Assignment;
 use App\Models\Jadwal;
 use App\Models\Materi;
 use App\Models\Penilaian;
 use App\Models\Santri;
 use App\Models\Subject;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -98,5 +98,28 @@ class DatabaseSeeder extends Seeder
         // === Materi (sample) ===
         Materi::create(['user_id' => $ustadz->id, 'subject_id' => $fiqih->id, 'academic_period_id' => $activePeriodId, 'judul' => 'Rukun Islam', 'deskripsi' => 'Materi tentang 5 rukun Islam', 'kelas' => 'XII-A', 'published_at' => '2024-01-15']);
         Materi::create(['user_id' => $ustadz->id, 'subject_id' => $hadis->id, 'academic_period_id' => $activePeriodId, 'judul' => 'Hadis Arbain Nawawi', 'deskripsi' => 'Kumpulan 40 hadis pilihan Imam Nawawi', 'kelas' => 'XI-A', 'published_at' => '2024-01-20']);
+
+        // === Assignments ===
+        Assignment::create([
+            'academic_period_id' => $activePeriodId,
+            'subject_id' => $fiqih->id,
+            'ustadz_id' => $ustadz->id,
+            'kelas' => 'XII-A',
+            'title' => 'Tugas Fiqih 1 - Rukun Sholat',
+            'description' => 'Jelaskan rukun sholat secara lengkap.',
+            'due_date' => now()->addDays(7),
+            'status' => 'draft',
+        ]);
+
+        Assignment::create([
+            'academic_period_id' => $activePeriodId,
+            'subject_id' => $hadis->id,
+            'ustadz_id' => $ustadz->id,
+            'kelas' => 'XI-A',
+            'title' => 'Hafalan Hadis Arbain 1',
+            'description' => 'Hafalkan hadis pertama Arbain Nawawi.',
+            'due_date' => now()->addDays(14),
+            'status' => 'open',
+        ]);
     }
 }
