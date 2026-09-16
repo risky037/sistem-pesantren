@@ -16,6 +16,7 @@ use App\Http\Controllers\Ustadz\JadwalController as UstadzJadwalController;
 use App\Http\Controllers\Ustadz\MateriController;
 use App\Http\Controllers\Ustadz\PenilaianController;
 use App\Http\Controllers\Ustadz\SantriController as UstadzSantriController;
+use App\Http\Controllers\Ustadz\SubmissionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -108,6 +109,9 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
     Route::delete('/assignments/{assignment}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
     Route::patch('/assignments/{assignment}/open', [AssignmentController::class, 'open'])->name('assignments.open');
     Route::patch('/assignments/{assignment}/close', [AssignmentController::class, 'close'])->name('assignments.close');
+
+    // LMS Submissions (Ustadz)
+    Route::get('/assignments/{assignment}/submissions', [SubmissionController::class, 'index'])->name('assignments.submissions.index');
 });
 
 // Profile Routes (Breeze)
@@ -121,6 +125,13 @@ Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->g
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
     Route::get('/grades', [GradeController::class, 'index'])->name('grades');
+
+    // LMS Submissions (Santri)
+    Route::get('/submissions', [App\Http\Controllers\Santri\SubmissionController::class, 'index'])->name('submissions.index');
+    Route::get('/assignments/{assignment}/submission', [App\Http\Controllers\Santri\SubmissionController::class, 'create'])->name('assignments.submission.create');
+    Route::post('/assignments/{assignment}/submissions', [App\Http\Controllers\Santri\SubmissionController::class, 'store'])->name('submissions.store');
+    Route::put('/submissions/{submission}', [App\Http\Controllers\Santri\SubmissionController::class, 'update'])->name('submissions.update');
+    Route::post('/submissions/{submission}/submit', [App\Http\Controllers\Santri\SubmissionController::class, 'submit'])->name('submissions.submit');
 });
 
 require __DIR__.'/auth.php';
