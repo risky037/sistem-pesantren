@@ -35,6 +35,7 @@ The LMS domain strictly separates the teacher's task definition from the student
 
 **Explicit Exclusions:**
 No additional fields are needed for P1-3B. The following are explicitly excluded:
+- `kelas` (Submission does not store `kelas`. The class boundary is inherited strictly from the parent Assignment).
 - File upload (`file_path`, `original_name`)
 - Attachments
 - Grading workflow (`score`, `graded_by`, `graded_at`)
@@ -46,7 +47,7 @@ The submission lifecycle follows a strict, linear progression: `draft` ➔ `subm
 
 - **`draft`:** The initial state. Editable by the owner (Santri). Not visible for Ustadz review.
 - **`submitted`:** The finalized state. It is immutable to the Santri. Visible to the Ustadz for review.
-- **`graded`:** A placeholder for future preparation only. Not functionally used in P1-3B.
+- **`graded`:** A placeholder for future preparation only. The transition from `submitted` ➔ `graded` is a future workflow. There is no grading action, controller, or UI in P1-3B.
 
 **Excluded States:**
 We do not introduce `approved`, `rejected`, or `published` (these belong to future workflows or different domains).
@@ -115,7 +116,7 @@ FormRequests should focus on input sanitization and presence, deferring complex 
 - **Authorization:** `authorize()` must verify the assignment is `open`, belongs to the active academic period, and matches the authenticated Santri's `kelas`.
 
 **`UpdateSubmissionRequest`:**
-- **Responsibilities:** Validates `content` and `status` (for the draft ➔ submitted transition).
+- **Responsibilities:** Validates `content`.
 - **Authorization:** `authorize()` defers to `SubmissionPolicy::update`, which ensures the submission belongs to the Santri and is currently a `draft`.
 
 ## 8. Controller Responsibility
@@ -123,9 +124,10 @@ FormRequests should focus on input sanitization and presence, deferring complex 
 Controllers must remain thin, orchestrating data retrieval and workflow execution while delegating authorization to the Policy layer.
 
 **Santri Submission Controller:**
-- Handles `store` (upsert behavior using `updateOrCreate`) and `update`.
+- Handles `store` (create new draft) and `update` (modify existing draft).
 - Injects the authenticated `santri_id`.
-- Executes status transitions (setting `submitted_at` when status becomes `submitted`).
+- Safely retrieves and updates drafts respecting immutability once submitted. (Does not use `updateOrCreate` to prevent bypassing immutability checks).
+- Uses a dedicated lifecycle action (e.g., `submit` method) for the `draft` ➔ `submitted` transition, setting `submitted_at`. Arbitrary status changes from the request payload are not allowed.
 
 **Ustadz Submission Controller:**
 - Handles `index` (listing submissions for a specific assignment) and `show`.
@@ -163,7 +165,7 @@ The following features are **explicitly excluded** from P1-3B:
 **Dependency:** The `submissions` table has a strict foreign key dependency on the `assignments` table. Therefore, the `assignments` table (from P1-3A) must exist first.
 
 **Rollback Safety:**
-- `ON DELETE CASCADE` from `assignments` ensures that if an assignment is deleted, its submissions are cleanly removed without leaving orphaned rows.
+- `ON DELETE RESTRICT` from `assignments` ensures that if an assignment has submissions, it cannot be deleted. This preserves historical submission records.
 - `ON DELETE RESTRICT` from `santris` ensures a Santri record cannot be deleted if they have historical submissions, preserving academic history.
 
 ## 12. Architecture Risks
