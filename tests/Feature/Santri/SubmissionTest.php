@@ -312,4 +312,27 @@ class SubmissionTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_santri_can_access_assignments_index()
+    {
+        $response = $this->actingAs($this->santriUserA)->get(route('santri.assignments.index'));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->component('Santri/Assignment/Index')
+            ->has('assignments')
+        );
+    }
+
+    public function test_santri_can_access_assignments_show_contract()
+    {
+        $response = $this->actingAs($this->santriUserA)->get(route('santri.assignments.show', $this->assignmentA));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->component('Santri/Assignment/Show')
+            ->has('assignment')
+            ->has('submission')
+        );
+    }
 }

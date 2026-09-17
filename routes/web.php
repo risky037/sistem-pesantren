@@ -126,6 +126,10 @@ Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->g
     Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
     Route::get('/grades', [GradeController::class, 'index'])->name('grades');
 
+    // LMS Assignments (Santri)
+    Route::get('/assignments', [App\Http\Controllers\Santri\AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('/assignments/{assignment}', [App\Http\Controllers\Santri\AssignmentController::class, 'show'])->name('assignments.show');
+
     // LMS Submissions (Santri)
     Route::get('/submissions', [App\Http\Controllers\Santri\SubmissionController::class, 'index'])->name('submissions.index');
     Route::get('/assignments/{assignment}/submission', [App\Http\Controllers\Santri\SubmissionController::class, 'create'])->name('assignments.submission.create');

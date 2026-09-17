@@ -20,7 +20,7 @@ class SubmissionController extends Controller
             ->latest()
             ->paginate(15);
 
-        return Inertia::render('Ustadz/Submissions/Index', [
+        return Inertia::render('Ustadz/Assignment/Submissions', [
             'assignment' => $assignment,
             'submissions' => $submissions,
         ]);

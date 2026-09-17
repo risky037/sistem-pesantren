@@ -15,23 +15,22 @@ class SubmissionController extends Controller
 {
     public function index(Request $request)
     {
-        $santri = $request->user()->santri;
-
-        $submissions = Submission::with('assignment')
-            ->where('santri_id', $santri->id)
-            ->latest()
-            ->paginate(15);
-
-        return Inertia::render('Santri/Submissions/Index', [
-            'submissions' => $submissions,
-        ]);
+        return redirect()->route('santri.assignments.index');
     }
 
-    public function create(Assignment $assignment)
+    public function create(Request $request, Assignment $assignment)
     {
-        // For santri to create a submission for a specific assignment
-        return Inertia::render('Santri/Submissions/Create', [
+        $santri = $request->user()->santri;
+
+        $submission = Submission::where('assignment_id', $assignment->id)
+            ->where('santri_id', $santri?->id)
+            ->first();
+
+        $assignment->load(['subject', 'ustadz']);
+
+        return Inertia::render('Santri/Assignment/Show', [
             'assignment' => $assignment,
+            'submission' => $submission,
         ]);
     }
 
@@ -55,7 +54,9 @@ class SubmissionController extends Controller
             'status' => 'draft',
         ]);
 
-        return redirect()->route('santri.submissions.index')->with('success', 'Submission draft saved.');
+        return redirect()->route('santri.assignments.show', $assignment->id)
+            ->with('submission_id', $submission->id)
+            ->with('success', 'Submission draft saved.');
     }
 
     public function update(UpdateSubmissionRequest $request, Submission $submission)
@@ -66,7 +67,9 @@ class SubmissionController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect()->route('santri.submissions.index')->with('success', 'Submission draft updated.');
+        return redirect()->route('santri.assignments.show', $submission->assignment_id)
+            ->with('submission_id', $submission->id)
+            ->with('success', 'Submission draft updated.');
     }
 
     public function submit(Request $request, Submission $submission)
@@ -78,6 +81,7 @@ class SubmissionController extends Controller
             'submitted_at' => now(),
         ]);
 
-        return redirect()->route('santri.submissions.index')->with('success', 'Submission submitted successfully.');
+        return redirect()->route('santri.assignments.show', $submission->assignment_id)
+            ->with('success', 'Submission submitted successfully.');
     }
 }
