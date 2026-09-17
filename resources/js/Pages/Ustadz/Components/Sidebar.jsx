@@ -1,5 +1,4 @@
 import { Link, usePage, router } from '@inertiajs/react';
-import Swal from 'sweetalert2';
 import Icon from '@/Components/Icon';
 
 function SidebarItem({ name, icon, href, basePath }) {
@@ -28,23 +27,11 @@ export default function Sidebar({ open, onClose }) {
         { name: 'Data Santri',     icon: 'users',     href: route('ustadz.santri.index'),   basePath: '/ustadz/santri' },
         { name: 'Penilaian',       icon: 'check',     href: route('ustadz.penilaian.index'), basePath: '/ustadz/penilaian' },
         { name: 'Materi Ajar',     icon: 'book',      href: route('ustadz.materi.index'),   basePath: '/ustadz/materi' },
+        { name: 'Tugas',           icon: 'file',      href: route('ustadz.assignments.index'), basePath: '/ustadz/assignments' },
     ];
 
     const handleLogout = () => {
-        Swal.fire({
-            title: 'Konfirmasi Keluar',
-            text: 'Apakah Anda yakin ingin keluar dari sistem?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Keluar',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(route('logout'));
-            }
-        });
+        router.post(route('logout'));
     };
 
     return (
